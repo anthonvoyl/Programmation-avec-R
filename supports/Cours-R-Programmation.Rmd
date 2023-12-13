@@ -1,0 +1,547 @@
+---
+title: "Programmation en R"
+author: "Alexis Gabadinho"
+date: "`r Sys.Date()`"
+header-includes:
+- \titlegraphic{\centering \includegraphics[width=8cm]{igpde.jpeg}}
+
+output:
+  beamer_presentation:
+    theme: "AnnArbor"
+    colortheme: "dolphin"
+    fonttheme: "structurebold"
+    number_sections: true
+    keep_tex: true
+    toc: true
+    df_print: tibble
+# geometry: margin=1in
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, tidy=TRUE)
+summarytools::st_options(plain.ascii = FALSE, style = "rmarkdown")
+
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  paste0("\n \\", "tiny","\n\n", x, "\n\n \\normalsize")
+})
+```
+
+# Introduction
+
+## Objectifs pédagogiques
+
+- Déﬁnir les fondamentaux de R
+- Créer une fonction
+- Gérer les attributs d'un objet
+- Gérer les paramètres d'une fonction
+
+
+## Prérequis
+
+- Savoir travailler en R : RStudio ou Rgui
+- Savoir installer, charger un package
+- Savoir naviguer dans la documentation des packages
+- Savoir visualiser la structure d’une table
+- Connaître le sens de l’assignation
+- Connaître la fonction data.frame
+- Avec le package `dplyr` : savoir créer une colonne, faire des
+statistiques
+ - Savoir utiliser le pipe `%>%`
+- Savoir faire un graphique simple (courbe, graphique en barre)
+
+
+# Les bases du langage (rappels)
+
+## Les type élémentaires (atomiques)
+
+- Les types de base en R (`atomic`):
+  - logical
+  - integer
+  - numeric (double)
+  - complex
+  - character
+  - raw
+
+## Les types `integer` et `numeric`
+
+- Numérique, virgule flottante (`double` ou `numeric`), base des calculs statistiques
+```{r}
+1
+```
+```{r}
+a <- 1 
+class(a)
+```
+
+- Numérique, entier (« integer ») : un nombre entier de ce type est suivi d’un L.
+```{r}
+b <- 1L
+class(b)
+```
+
+## Le type `logical` (booleen)
+
+- Logique/booléen (« logical », résultat des tests)
+```{r}
+a == b
+```
+```{r}
+c <- FALSE
+class(c)
+```
+
+## Le type `character` 
+
+- Caractère (« character », chaînes de contenu quelconque, entre simples ou doubles quotes
+
+```{r}
+d <- 'Je suis une chaîne de caractères'
+class(d)
+```
+
+
+## Les types de données élémentaires: `raw`
+
+- Brut (« raw », pour des manipulations au niveau de l’octet)
+```{r}
+as.raw(2)
+```
+
+- La fonction `charToRaw()` convertit un caractère de longueur 1 en `raw`
+
+```{r}
+charToRaw("a")
+```
+
+## Les vecteurs
+
+- Un donnée d’un des types atomiques ne peut exister qu’au sein d’un **vecteur**
+```{r}
+a <- 1
+is.vector(a)
+```
+
+- L'objet `a` est un vecteur de longueur 1
+
+```{r}
+length(a)
+```
+
+- L'objet `b` est également de type `numeric`
+
+```{r}
+b <- c(1,2)
+class(b)
+```
+
+- Sa longueur est de 2
+```{r}
+length(b)
+```
+
+
+## Stockage des objets
+
+- La fonction `storage.mode()` renvoie la manière dont sont représentées les données en mémoire (pour une donnée, il n’y a qu’un mode de stockage)
+```{r}
+d <- Sys.Date()
+d
+```
+
+- Une date est stockée sous la forme d'un nombre décimal
+```{r}
+storage.mode(d)
+```
+
+## Classe d'un objet
+
+- La fonction `class()` renvoie la façon dont pourront être utilisées les données (méthodes)
+```{r}
+class(d)
+```
+
+- Un objet peut avoir plusieurs classes (héritage), la fonction `class()` peut renvoyer un vecteur 
+
+- Ce sont les fonctions génériques (voir plus loin) qui permettent ensuite d’associer un comportement à une
+classe
+
+## Constantes et symboles
+
+- Commençant par des chiffres, ou un point suivi de chiffres : un nombre (`numeric`, `double`)
+```{r}
+12
+```
+- Commençant par des quotes simples (') ou doubles (") : une chaîne de caractères
+```{r}
+'abcd'
+```
+- Pas de quotes, commençant par une lettre ou un point, suivi de lettres, chiffres, points, ou blanc soulignés : le nom de quelque chose, un « symbole » dont la signification peut varier
+```{r}
+sum
+```
+- Séquences de caractères prédéfinies, mots-clés du langage dont la signification est inaltérable
+```{r}
+TRUE
+```
+
+
+
+## Fonctions et opérateurs
+
+- Il y a deux façons d’obtenir un résultat :
+  - Par des appels de **fonction** : un nom de fonction (un « symbole ») et, entre parenthèses, séparés par des virgules, les paramètres de la fonction passés soit par **position** soit par **nom**
+```{r, eval=TRUE}
+library(rio)
+fichier <- "/home/alex/Devel/Cours-R-Programmation/data/dpt2022.csv"
+import(fichier, as.is=TRUE)
+```
+  - Par des appels à des **opérateurs** : une expression, l’opérateur et une autre expression
+```{r}
+1+1
+a <- 1
+```
+
+- Certains opérateurs sont fournis par des librairies optionnelles
+
+```{r, eval=TRUE}
+library(tidyr)
+fichier %>% import(as.is=TRUE)
+```
+
+
+- Tout appel produit un résultat (pas nécessairement visible, comme par exemple avec l'opérateur `<-`)
+
+
+## La boucle de l'invite de commande
+
+- Lecture d'une chaîne de caractères: `scan()`
+- Interprétation du code à exécuter (syntaxe): `parse()`
+- Evaluation (produit un résultat en mémoire): `eval()`
+- Impression (affichage du résultat dans la console): `print()`
+
+
+## Les fonctions `parse()` et `eval()`
+
+- Le rôle de la fonction `parse()` est de faire les contrôles de syntaxe. Au passage, elle
+transforme une séquence de caractères en une structure interne, une « expression »
+ordonnançant les futurs calculs
+
+```{r}
+e <- parse(text="6*7")
+e
+```
+- L’expression contient l’arborescence des calculs à effectuer
+```{r}
+as.list(e[[1]])
+```
+
+- La fonction `eval()` appliquée à une **expression**, permet d’obtenir un résultat. Elle est le coeur de R.
+```{r}
+eval(e)
+```
+
+## La fonction `quote()`
+
+- Comme une majorité de fonctions, la fonction `eval()` commence par prendre
+la valeur de son argument puis travaille sur cette valeur. Au final, comme la fonctionnalité est d’évaluer,
+l’argument est évalué deux fois.
+- La fonction `quote()` fait, elle, partie des fonctions qui ne commencent pas
+par prendre la valeur de leur argument. La fonction quote restitue son argument sans tenter de l’évaluer.
+
+```{r}
+e <- quote(6*7)
+class(e)
+```
+```{r}
+e
+```
+```{r}
+eval(e)
+```
+
+- Il existe de nombreuses fonctions qui travaillent ainsi sur des objets de nature « expression » autorisant ainsi la construction de programmes constructeurs de programmes sans passer par une représentation sous forme de chaîne de caractères.
+
+## La fonction `print()`
+
+- Toute opération en R produit un résultat, c’est à dire un objet stocké quelque part en mémoire.
+- La dernière étape de la boucle est donc la visualisation de ce résultat.
+- Celui ci peut être simple (une chaîne de caractères) : juste entouré de quotes ou ...
+- ... un peu plus compliqué parce que nécessitant des choix de présentation (un nombre, un
+data.frame) ou être une structure encore plus complexe (un tableau, un graphique...)
+
+## La fonction `print()`: Exemple
+
+```{r, out.width="70%", fig.align='center'}
+library(ggformula)
+g <- mtcars %>% gf_bar( ~ cyl, fill="blue") + theme_minimal()
+g
+```
+
+## La fonction `invisible()`
+
+- Toute fonction produit un résultat, tout opérateur est une fonction, `<-` est un opérateur. 
+- Pourtant l’affectation ne montre rien
+```{r}
+x <- 6 * 7
+```
+- L'utilisation des parenthèses permet de montrer le résultat du calcul
+```{r}
+(x <- 6*7)
+```
+
+- Il est possible de définir des fonctions avec un résultat marqué comme invisible et qui, comme tel, ne sera pas affiché par print.
+```{r}
+6*print(7)
+```
+- La fonction `invisible()` marque l’évaluation de son argument comme ne devant pas être affiché.
+```{r}
+invisible(6*print(7))
+```
+
+
+# Symboles et objets
+
+## Contenus, noms
+
+- De façon quasi systématique, l'appel à une fonction R crée quelque chose quelque part en
+mémoire. 
+- La quantité de mémoire occupée n'est pas définie a priori, c'est la fonction qui se charge
+de "prendre" ce dont elle a besoin.
+- Le résultat de l'appel d'une fonction devrait donc être une indication de l'endroit où la fonction a créé
+quelque chose, mais cela ne serait guère pratique de manipuler des adresses mémoire.
+- A la place, on utilise l'assignation `<-` pour associer un **nom** à l'**objet** créé (ce qui permet de le réutiliser)
+```{r}
+prenoms2022 <- import("../data/dpt2022.csv", as.is=TRUE)
+```
+
+## Symboles
+
+- Contrairement à la logique de beaucoup de langages de programmation, des noms comme `prenoms2022`, `import` ne correspondent pas à des cases contenant des choses (une table, une fonction) qu'il aurait fallu pré-déclarer. 
+- Ce sont plutôt des étiquettes (des symboles), qu'on appose a posteriori à coté des objets pour pouvoir en parler
+- L'instruction suivante ne fait aucune copie, mais créé un second nom pour identifier le même objet
+```{r}
+prenoms2022b <- prenoms2022
+```
+
+## Association d'un nom 
+
+1. Chargement des données en mémoire
+```{r}
+prenoms2022 <- import("../data/dpt2022.csv", as.is=TRUE)
+```
+
+2. Enregistrement d'un nom, l'objet apparaît dans l'environnement `.GlobalEnv`
+```{r}
+ls()
+```
+
+3. Association du nom aux données
+
+## Symboles ou chaînes de caractères
+
+- Les symboles ne sont pas que des étiquettes apposées sur des objets, ils peuvent aussi être
+utilisés comme arguments sans faire référence à l’objet qu’ils pourraient désigner (il
+pourraient n’en désigner aucun!). Et des ponts existent vers le type "character".
+- Ici on convertit le symbole `x` PAS sa valeur
+```{r}
+as.character(quote(x))
+```
+- Ici on fabrique un symbole à partir d'une chaîne de caractère
+```{r}
+as.name("x")
+```
+
+- On peut aussi explicitement naviguer dans le lien entre un symbole, exprimé comme chaîne
+de caractères, et l’objet associé.
+
+```{r}
+x <- 42
+get("x")
+```
+- Par contre l'instruction suivante renvoie une erreur car cela revient à faire `get(42)`
+```{r, eval=FALSE}
+get(x)
+```
+
+- Assignation d'une valeur à un nom dans un environement
+```{r}
+assign("x",pi)
+```
+
+## Les objets ne sont pas modifiables 
+
+# Les principes du langage R
+
+## Introduction
+
+- Le statique: les données
+  1. Pas de variables, mais des **objets** et des **symboles**
+  2, Un objet n’est **plus modifiable** après sa création
+  3. Les données des types de base n’existent qu’au sein de
+**vecteurs**
+- Le dynamique: les fonctions
+  4. Une fonction derrière toute opération
+  5. Une fonction est une forme particulière d'objet
+  6. Toute fonction peut être surchargée
+  7. Chaque fonction est libre d'interpréter ses arguments comme elle le veut
+  
+## Quelques principes de programmation
+
+- Commencez petit: 
+  -Pour résoudre un problème ‘truc’, ne pas commencer par écrire ‘truc <- function...’. 
+  - Mais commencer par décomposer le problème en sous questions élémentaires et ensuite commencer par coder et tester ses sous-questions. 
+  - L’assemblage n’est que la dernière étape.
+
+- Écrivez des petites fonctions.
+  - Une fonction pour chaque opération élémentaire : ne pas tenter de faire plusieurs choses disjointes dans une même fonction.
+  - Le code d’une fonction doit tenir sur un seul écran pour permettre d’en suivre la logique de déroulement sans toucher au clavier et à la souris.
+  - Les fonctions potentiellement neutres (accolades, return) ne sont pas de bons amis quand elle sont sur-utilisées.
+- Faites la chasse aux clones.
+  - Ne JAMAIS dupliquer de code : cela alourdit le programme et introduit un point de faiblesse en cas de modification ultérieure.  
+- Factoriser au maximum. 
+  - R permet une grande souplesse dans les arguments des fonctions :des codes presque identiques peuvent toujours être réduits à l’usage d’une unique fonction.
+- Respectez la symétrie.
+Si le problème à traiter présente une forme de symétrie, celle-ci doit se retrouver dans le code, sinon c’est un indice de cas mal couverts.
+-Ne vous préoccupez pas d’optimisation, sauf dans les cas critiques
+-Testez
+Commencer par les cas extrêmes. Les autres ont plus de chances de fonctionner.
+-
+Adoptez un style et tenez vous y.
+Il y a plusieurs façons d’écrire du R, de nommer ses objets ou de présenter les programmes.
+Ne mélangez les patois R qu’en cas de nécessité.
+Un nom d’objet parlant évite bien des commentaires.
+-Décrivez ce que font vos fonctions.
+-Commentez les passages difficiles.
+Mais uniquement les passages difficiles : un commentaire de type paraphrase alourdit les programmes et floute la vision.
+-
+Soignez l’esthétique !
+Votre programme est votre bébé : gardez le propre, bien proportionné et beau. Plus il sera beau plus il sera attachant et incitera
+à lire votre code ou à lui faire confiance.
+
+## Importer des données en R
+
+-
+Données tabulaires (lignes x colonnes avec au croisement une donnée
+« élémentaire »)
+– import du package rio : l’outil tous terrains en fonction du suffixe
+– Paramétrage spécifique pour cas particulier : suivre la piste rio, la documentation
+indique le package utilisé (donc préconisé) et ses options
+– read.fwf pour les formats à largeur de champ fixe
+-
+Données structurées non tabulaires : un peu de programmation autour de
+packages standard (cf. rio)
+– Classeurs XLSX de plus d’une feuille
+– Fichiers XML : packages XML, xml2
+-
+Fichiers texte non structurés : programmer à l’aide des fonctions de
+manipulation de chaînes de caractères (package stringr)
+– Fonctions utiles : readLines , read_file du package readr
+-
+Fichiers binaires (autres que images, sons, films) : programmer autour du
+type de données "raw"
+– Fonctions utiles :
+open, close, readBin
+
+# Les vecteurs
+
+## Créer un vecteur (1)
+
+- En R, la structure de données de base est le vecteur : ensemble de données qui sont toutes du même “type” de base (aussi dit “atomique”):
+  - booléen : “logical”,
+  - numérique entier : “integer”,
+  - numérique, virgule flottante : “double”, date : "date"
+  - numérique complexe : “complex”,
+  - chaîne de caractères : “character”, facteur : "factor"
+  - octet : “raw”.
+- Les données dans ces types de base ne peuvent exister en dehors d’une structure de vecteur (principe 3).
+- La plus simple façon de créer un vecteur (de longueur 1) est juste d’écrire une constante dans un type de
+base :
+```{r}
+42
+```
+Un vecteur peut être vide, par exemple à la suite d’une sélection infructueuse. La notation est le type du vecteur
+suivi de (0) :
+```{r}
+v <- logical(0)
+v
+```
+
+## Créer un vecteur (2)
+
+- On peut également utiliser:
+  - la fonction `vector()` qui crée un vecteur de type donné et de longueur donnée
+```{r}
+vector("complex",5)
+```
+ 
+  - La fonction de collecte `c()` qui cherche à combiner ses arguments en vecteur (lorsque c’est possible : quand ils peuvent être mis au même type, sinon elle produit une liste)
+```{r}
+c(6,7)
+```
+
+  – de nombreuses autres fonctions : la répétition, 
+```{r}
+rep(TRUE,5)
+
+```
+la fabrication de suite d’entiers consécutifs, etc...
+```{r}
+1:10
+```
+
+## Exercice
+
+- Avec la fonction `as.Date()` convertir la chaîne de caractères "2017-01-01" en donnée de
+type « date »
+-Lui ajouter 1. On passe au 2 janvier 2017.
+-Lui ajouter la suite des nombres de 1 à 7.
+- Appliquer la fonction `weekdays()` au résultat que l’on mémorisera sous le nom `jour`. Quel jour de
+la semaine était le 1er janvier 2017 ?
+
+## Accéder aux éléments d'un vecteur (1)
+
+- La sélection d’une partie d’un vecteur se fait avec l’opérateur “crochet” `[...]` (c’est à dire une
+fonction, cf. principe numéro 4) au sein duquel on peut préciser :
+  - un vecteur de nombres entiers : pour extraire les éléments de numéros cité
+```{r}
+(v <- 101:110)
+
+```
+par exemple les éléments 3 à 5
+```{r}
+v[3:5]
+```
+
+  - ou les éléments 5 à 3
+```{r}
+v[5:3]
+```
+
+  - un vecteur de nombres entiers négatifs : pour extraire tous les éléments sauf ceux de numéro cités
+```{r}
+v[-3:-5]
+```
+
+## Accéder aux éléments d'un vecteur (2)
+
+- un vecteur de booléens pour spécifier quels éléments doivent être conservés (TRUE) ou non (FALSE)
+
+```{r}
+v[c(TRUE,rep(FALSE,8),TRUE)]
+```
+- Le crochet ne fait pas de l’indexation, c’est un véritable opérateur entre deux vecteurs.
+- L’intérêt majeur de la sélection par vecteur de booléens est que ce vecteur peut provenir d’un calcul logique, où on exprime une condition sur les éléments. Cette condition peut utiliser n’importe quel élément connu de R, et en particulier le vecteur lui-même.
+- Exemple : une sélection des éléments dont la parité (pair/impair) dépend du positionnement
+d’un paramètre de nom PARITE (%% est le reste de la division entière)
+
+```{r}
+PARITE <- 1
+v[(v %% 2)==PARITE]
+```
+
+
+
+## Les listes
