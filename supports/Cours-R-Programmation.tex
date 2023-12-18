@@ -143,7 +143,7 @@
 
 \title{Programmation en R}
 \author{Alexis Gabadinho}
-\date{2023-12-13}
+\date{2023-12-18}
 
 \begin{document}
 \frame{\titlepage}
@@ -167,6 +167,10 @@
 \item
   Gérer les paramètres d'une fonction
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Supports}
+\protect\hypertarget{supports}{}
 \end{frame}
 
 \begin{frame}[fragile]{Prérequis}
@@ -195,63 +199,26 @@
 \end{itemize}
 \end{frame}
 
-\hypertarget{les-bases-du-langage-rappels}{%
-\section{Les bases du langage
-(rappels)}\label{les-bases-du-langage-rappels}}
+\hypertarget{les-principes-du-langage-r}{%
+\section{Les principes du langage R}\label{les-principes-du-langage-r}}
 
-\begin{frame}[fragile]{Les type élémentaires (atomiques)}
-\protect\hypertarget{les-type-uxe9luxe9mentaires-atomiques}{}
+\begin{frame}[fragile]{Objets et classes}
+\protect\hypertarget{objets-et-classes}{}
 \begin{itemize}
 \tightlist
 \item
-  Les types de base en R (\texttt{atomic}):
-
-  \begin{itemize}
-  \tightlist
-  \item
-    logical
-  \item
-    integer
-  \item
-    numeric (double)
-  \item
-    complex
-  \item
-    character
-  \item
-    raw
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Les types \texttt{integer} et \texttt{numeric}}
-\protect\hypertarget{les-types-integer-et-numeric}{}
-\begin{itemize}
-\tightlist
+  En R tout est \textbf{objet}
 \item
-  Numérique, virgule flottante (\texttt{double} ou \texttt{numeric}),
-  base des calculs statistiques
+  Chaque objet a une (ou plusieurs) classes
+\item
+  La fonction \texttt{class()} renvoie la classe d'un objet
 \end{itemize}
 
 \tiny
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\DecValTok{1}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 1
-\end{verbatim}
-
-\normalsize
-
-\tiny
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{a }\OtherTok{\textless{}{-}} \DecValTok{1} 
+\NormalTok{a }\OtherTok{\textless{}{-}} \DecValTok{1}
 \FunctionTok{class}\NormalTok{(a)}
 \end{Highlighting}
 \end{Shaded}
@@ -263,216 +230,24 @@
 \normalsize
 
 \begin{itemize}
-\tightlist
 \item
-  Numérique, entier (« integer ») : un nombre entier de ce type est
-  suivi d'un L.
+  Ce sont les fonctions génériques (voir plus loin) qui permettent
+  ensuite d'associer un comportement à une classe
+\item
+  La classe d'un objet est \textbf{modifiable} ´
 \end{itemize}
 
 \tiny
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{b }\OtherTok{\textless{}{-}} \DecValTok{1}\DataTypeTok{L}
-\FunctionTok{class}\NormalTok{(b)}
+\FunctionTok{class}\NormalTok{(a) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"truc"}\NormalTok{,}\StringTok{"machin"}\NormalTok{)}
+\FunctionTok{class}\NormalTok{(a)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## [1] "integer"
-\end{verbatim}
-
-\normalsize
-\end{frame}
-
-\begin{frame}[fragile]{Le type \texttt{logical} (booleen)}
-\protect\hypertarget{le-type-logical-booleen}{}
-\begin{itemize}
-\tightlist
-\item
-  Logique/booléen (« logical », résultat des tests)
-\end{itemize}
-
-\tiny
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{a }\SpecialCharTok{==}\NormalTok{ b}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] TRUE
-\end{verbatim}
-
-\normalsize
-
-\tiny
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{c }\OtherTok{\textless{}{-}} \ConstantTok{FALSE}
-\FunctionTok{class}\NormalTok{(c)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] "logical"
-\end{verbatim}
-
-\normalsize
-\end{frame}
-
-\begin{frame}[fragile]{Le type \texttt{character}}
-\protect\hypertarget{le-type-character}{}
-\begin{itemize}
-\tightlist
-\item
-  Caractère (« character », chaînes de contenu quelconque, entre simples
-  ou doubles quotes
-\end{itemize}
-
-\tiny
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{d }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}Je suis une chaîne de caractères\textquotesingle{}}
-\FunctionTok{class}\NormalTok{(d)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] "character"
-\end{verbatim}
-
-\normalsize
-\end{frame}
-
-\begin{frame}[fragile]{Les types de données élémentaires: \texttt{raw}}
-\protect\hypertarget{les-types-de-donnuxe9es-uxe9luxe9mentaires-raw}{}
-\begin{itemize}
-\tightlist
-\item
-  Brut (« raw », pour des manipulations au niveau de l'octet)
-\end{itemize}
-
-\tiny
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{as.raw}\NormalTok{(}\DecValTok{2}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 02
-\end{verbatim}
-
-\normalsize
-
-\begin{itemize}
-\tightlist
-\item
-  La fonction \texttt{charToRaw()} convertit un caractère de longueur 1
-  en \texttt{raw}
-\end{itemize}
-
-\tiny
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{charToRaw}\NormalTok{(}\StringTok{"a"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 61
-\end{verbatim}
-
-\normalsize
-\end{frame}
-
-\begin{frame}[fragile]{Les vecteurs}
-\protect\hypertarget{les-vecteurs}{}
-\begin{itemize}
-\tightlist
-\item
-  Un donnée d'un des types atomiques ne peut exister qu'au sein d'un
-  \textbf{vecteur}
-\end{itemize}
-
-\tiny
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{a }\OtherTok{\textless{}{-}} \DecValTok{1}
-\FunctionTok{is.vector}\NormalTok{(a)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] TRUE
-\end{verbatim}
-
-\normalsize
-
-\begin{itemize}
-\tightlist
-\item
-  L'objet \texttt{a} est un vecteur de longueur 1
-\end{itemize}
-
-\tiny
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{length}\NormalTok{(a)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 1
-\end{verbatim}
-
-\normalsize
-
-\begin{itemize}
-\tightlist
-\item
-  L'objet \texttt{b} est également de type \texttt{numeric}
-\end{itemize}
-
-\tiny
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{b }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{)}
-\FunctionTok{class}\NormalTok{(b)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] "numeric"
-\end{verbatim}
-
-\normalsize
-
-\begin{itemize}
-\tightlist
-\item
-  Sa longueur est de 2
-\end{itemize}
-
-\tiny
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{length}\NormalTok{(b)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 2
+## [1] "truc"   "machin"
 \end{verbatim}
 
 \normalsize
@@ -498,7 +273,7 @@
 \end{Shaded}
 
 \begin{verbatim}
-## [1] "2023-12-13"
+## [1] "2023-12-18"
 \end{verbatim}
 
 \normalsize
@@ -522,43 +297,31 @@
 \end{verbatim}
 
 \normalsize
-\end{frame}
 
-\begin{frame}[fragile]{Classe d'un objet}
-\protect\hypertarget{classe-dun-objet}{}
 \begin{itemize}
 \tightlist
 \item
-  La fonction \texttt{class()} renvoie la façon dont pourront être
-  utilisées les données (méthodes)
+  Pour les types de base, classe et stockage sont
 \end{itemize}
 
 \tiny
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{class}\NormalTok{(d)}
+\NormalTok{i }\OtherTok{\textless{}{-}} \DecValTok{12}\DataTypeTok{L}
+\FunctionTok{storage.mode}\NormalTok{(i)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## [1] "Date"
+## [1] "integer"
 \end{verbatim}
 
 \normalsize
-
-\begin{itemize}
-\item
-  Un objet peut avoir plusieurs classes (héritage), la fonction
-  \texttt{class()} peut renvoyer un vecteur
-\item
-  Ce sont les fonctions génériques (voir plus loin) qui permettent
-  ensuite d'associer un comportement à une classe
-\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Constantes et symboles}
-\protect\hypertarget{constantes-et-symboles}{}
+\begin{frame}[fragile]{Constantes et symboles (1)}
+\protect\hypertarget{constantes-et-symboles-1}{}
 \begin{itemize}
 \tightlist
 \item
@@ -578,8 +341,14 @@
 ## [1] 12
 \end{verbatim}
 
-\normalsize - Commençant par des quotes simples (') ou doubles (``) :
-une chaîne de caractères
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Commençant par des quotes simples (') ou doubles (``) : une chaîne de
+  caractères
+\end{itemize}
 
 \tiny
 
@@ -593,9 +362,18 @@ une chaîne de caractères
 ## [1] "abcd"
 \end{verbatim}
 
-\normalsize - Pas de quotes, commençant par une lettre ou un point,
-suivi de lettres, chiffres, points, ou blanc soulignés : le nom de
-quelque chose, un « symbole » dont la signification peut varier
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Constantes et symboles (2)}
+\protect\hypertarget{constantes-et-symboles-2}{}
+\begin{itemize}
+\tightlist
+\item
+  Pas de quotes, commençant par une lettre ou un point, suivi de
+  lettres, chiffres, points, ou blanc soulignés : le nom de quelque
+  chose, un « symbole » dont la signification peut varier
+\end{itemize}
 
 \tiny
 
@@ -609,8 +387,14 @@ quelque chose, un « symbole » dont la signification peut varier
 ## function (..., na.rm = FALSE)  .Primitive("sum")
 \end{verbatim}
 
-\normalsize - Séquences de caractères prédéfinies, mots-clés du langage
-dont la signification est inaltérable
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Séquences de caractères prédéfinies, \textbf{mots-clés} du langage
+  dont la signification est inaltérable
+\end{itemize}
 
 \tiny
 
@@ -627,8 +411,8 @@ dont la signification est inaltérable
 \normalsize
 \end{frame}
 
-\begin{frame}[fragile]{Fonctions et opérateurs}
-\protect\hypertarget{fonctions-et-opuxe9rateurs}{}
+\begin{frame}[fragile]{Fonctions et opérateurs (1)}
+\protect\hypertarget{fonctions-et-opuxe9rateurs-1}{}
 \begin{itemize}
 \tightlist
 \item
@@ -671,8 +455,17 @@ dont la signification est inaltérable
 ## # i 3,835,757 more rows
 \end{verbatim}
 
-\normalsize - Par des appels à des \textbf{opérateurs} : une expression,
-l'opérateur et une autre expression
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Fonctions et opérateurs (2)}
+\protect\hypertarget{fonctions-et-opuxe9rateurs-2}{}
+\begin{itemize}
+\tightlist
+\item
+  Par des appels à des \textbf{opérateurs} : une expression, l'opérateur
+  et une autre expression
+\end{itemize}
 
 \tiny
 
@@ -945,7 +738,7 @@ effectuer
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics[width=0.7\linewidth]{Cours-R-Programmation_files/figure-beamer/unnamed-chunk-29-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{Cours-R-Programmation_files/figure-beamer/unnamed-chunk-19-1} \end{center}
 
 \normalsize
 \end{frame}
@@ -1027,11 +820,8 @@ son argument comme ne devant pas être affiché.
 \normalsize
 \end{frame}
 
-\hypertarget{symboles-et-objets}{%
-\section{Symboles et objets}\label{symboles-et-objets}}
-
-\begin{frame}[fragile]{Contenus, noms}
-\protect\hypertarget{contenus-noms}{}
+\begin{frame}[fragile]{Symboles et objets (1)}
+\protect\hypertarget{symboles-et-objets-1}{}
 \begin{itemize}
 \tightlist
 \item
@@ -1061,8 +851,8 @@ son argument comme ne devant pas être affiché.
 \normalsize
 \end{frame}
 
-\begin{frame}[fragile]{Symboles}
-\protect\hypertarget{symboles}{}
+\begin{frame}[fragile]{Symboles et objets (2)}
+\protect\hypertarget{symboles-et-objets-2}{}
 \begin{itemize}
 \tightlist
 \item
@@ -1124,9 +914,9 @@ son argument comme ne devant pas être affiché.
 \end{Shaded}
 
 \begin{verbatim}
-##  [1] "a"              "b"              "c"              "d"             
-##  [5] "def.chunk.hook" "e"              "fichier"        "g"             
-##  [9] "prenoms2022"    "prenoms2022b"   "x"
+##  [1] "a"              "d"              "def.chunk.hook" "e"             
+##  [5] "fichier"        "g"              "i"              "prenoms2022"   
+##  [9] "prenoms2022b"   "x"
 \end{verbatim}
 
 \normalsize
@@ -1139,8 +929,8 @@ son argument comme ne devant pas être affiché.
 \end{enumerate}
 \end{frame}
 
-\begin{frame}[fragile]{Symboles ou chaînes de caractères}
-\protect\hypertarget{symboles-ou-chauxeenes-de-caractuxe8res}{}
+\begin{frame}[fragile]{Symboles ou chaînes de caractères (1)}
+\protect\hypertarget{symboles-ou-chauxeenes-de-caractuxe8res-1}{}
 \begin{itemize}
 \tightlist
 \item
@@ -1164,8 +954,13 @@ son argument comme ne devant pas être affiché.
 ## [1] "x"
 \end{verbatim}
 
-\normalsize - Ici on fabrique un symbole à partir d'une chaîne de
-caractère
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Ici on fabrique un symbole à partir d'une chaîne de caractère
+\end{itemize}
 
 \tiny
 
@@ -1180,7 +975,10 @@ caractère
 \end{verbatim}
 
 \normalsize
+\end{frame}
 
+\begin{frame}[fragile]{Symboles ou chaînes de caractères (2)}
+\protect\hypertarget{symboles-ou-chauxeenes-de-caractuxe8res-2}{}
 \begin{itemize}
 \tightlist
 \item
@@ -1231,176 +1029,377 @@ cela revient à faire \texttt{get(42)}
 \normalsize
 \end{frame}
 
-\begin{frame}{Les objets ne sont pas modifiables}
-\protect\hypertarget{les-objets-ne-sont-pas-modifiables}{}
-\end{frame}
-
-\hypertarget{les-principes-du-langage-r}{%
-\section{Les principes du langage R}\label{les-principes-du-langage-r}}
-
-\begin{frame}{Introduction}
-\protect\hypertarget{introduction-1}{}
+\begin{frame}{Les objets ne sont pas modifiables (1)}
+\protect\hypertarget{les-objets-ne-sont-pas-modifiables-1}{}
 \begin{itemize}
 \tightlist
 \item
-  Le statique: les données
-
-  \begin{enumerate}
-  \tightlist
-  \item
-    Pas de variables, mais des \textbf{objets} et des \textbf{symboles}
-    2, Un objet n'est \textbf{plus modifiable} après sa création
-  \item
-    Les données des types de base n'existent qu'au sein de
-    \textbf{vecteurs}
-  \end{enumerate}
+  En règle quasi-générale (exceptions : data.table, R6), il est
+  impossible de modifier un objet de R.
 \item
-  Le dynamique: les fonctions
+  Fonctionnellement, si on veut faire une modification à un objet, par
+  exemple une table de données, associée à un symbole donné :
 
-  \begin{enumerate}
-  \setcounter{enumi}{3}
+  \begin{itemize}
   \tightlist
   \item
-    Une fonction derrière toute opération
+    on construit une copie modifiée de la table
   \item
-    Une fonction est une forme particulière d'objet
+    on associe la copie modifiée au symbole
   \item
-    Toute fonction peut être surchargée
-  \item
-    Chaque fonction est libre d'interpréter ses arguments comme elle le
-    veut
-  \end{enumerate}
+    la précédente table associée au symbole est alors perdue parce que
+    plus référençable (sauf si on l'avait associée à un deuxième
+    symbole).
+  \end{itemize}
+\item
+  En pratique, c'est R qui se charge de minimiser le nombre de réelles
+  copies et de supprimer de la mémoire les objets ``perdus'' (non
+  référençables).
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Quelques principes de programmation}
-\protect\hypertarget{quelques-principes-de-programmation}{}
+\begin{frame}[fragile]{Les objets ne sont pas modifiables (2)}
+\protect\hypertarget{les-objets-ne-sont-pas-modifiables-2}{}
 \begin{itemize}
 \tightlist
 \item
-  Commencez petit: -Pour résoudre un problème `truc', ne pas commencer
-  par écrire `truc \textless- function\ldots{}'.
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Mais commencer par décomposer le problème en sous questions
-    élémentaires et ensuite commencer par coder et tester ses
-    sous-questions.
-  \item
-    L'assemblage n'est que la dernière étape.
-  \end{itemize}
-\item
-  Écrivez des petites fonctions.
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Une fonction pour chaque opération élémentaire : ne pas tenter de
-    faire plusieurs choses disjointes dans une même fonction.
-  \item
-    Le code d'une fonction doit tenir sur un seul écran pour permettre
-    d'en suivre la logique de déroulement sans toucher au clavier et à
-    la souris.
-  \item
-    Les fonctions potentiellement neutres (accolades, return) ne sont
-    pas de bons amis quand elle sont sur-utilisées.
-  \end{itemize}
-\item
-  Faites la chasse aux clones.
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Ne JAMAIS dupliquer de code : cela alourdit le programme et
-    introduit un point de faiblesse en cas de modification ultérieure.\\
-  \end{itemize}
-\item
-  Factoriser au maximum.
-
-  \begin{itemize}
-  \tightlist
-  \item
-    R permet une grande souplesse dans les arguments des fonctions :des
-    codes presque identiques peuvent toujours être réduits à l'usage
-    d'une unique fonction.
-  \end{itemize}
-\item
-  Respectez la symétrie. Si le problème à traiter présente une forme de
-  symétrie, celle-ci doit se retrouver dans le code, sinon c'est un
-  indice de cas mal couverts. -Ne vous préoccupez pas d'optimisation,
-  sauf dans les cas critiques -Testez Commencer par les cas extrêmes.
-  Les autres ont plus de chances de fonctionner.
-\item
-  Adoptez un style et tenez vous y. Il y a plusieurs façons d'écrire du
-  R, de nommer ses objets ou de présenter les programmes. Ne mélangez
-  les patois R qu'en cas de nécessité. Un nom d'objet parlant évite bien
-  des commentaires. -Décrivez ce que font vos fonctions. -Commentez les
-  passages difficiles. Mais uniquement les passages difficiles : un
-  commentaire de type paraphrase alourdit les programmes et floute la
-  vision.
-\item
-  Soignez l'esthétique ! Votre programme est votre bébé : gardez le
-  propre, bien proportionné et beau. Plus il sera beau plus il sera
-  attachant et incitera à lire votre code ou à lui faire confiance.
+  Par exemple, avec le package dplyr, pour convertir la colonne
+  \texttt{sexe} de la table `nanopop' en numérique dans une nouvelle
+  variable sexe2, on écrira :
 \end{itemize}
-\end{frame}
 
-\begin{frame}{Importer des données en R}
-\protect\hypertarget{importer-des-donnuxe9es-en-r}{}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nanopop }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sexe2=}\FunctionTok{as.numeric}\NormalTok{(sexe))}
+\end{Highlighting}
+\end{Shaded}
+
+\normalsize
+
 \begin{itemize}
 \tightlist
 \item
-  Données tabulaires (lignes x colonnes avec au croisement une donnée «
-  élémentaire ») -- import du package rio : l'outil tous terrains en
-  fonction du suffixe -- Paramétrage spécifique pour cas particulier :
-  suivre la piste rio, la documentation indique le package utilisé (donc
-  préconisé) et ses options -- read.fwf pour les formats à largeur de
-  champ fixe
+  En sortie il y a en mémoire :
+
+  \begin{itemize}
+  \tightlist
+  \item
+    le résultat, une table avec la colonne supplémentaire , qui est
+    juste affiché,
+  \item
+    mais aussi la table originale, qui est toujours associée au symbole
+    nanopop.
+  \end{itemize}
 \item
-  Données structurées non tabulaires : un peu de programmation autour de
-  packages standard (cf.~rio) -- Classeurs XLSX de plus d'une feuille --
-  Fichiers XML : packages XML, xml2
-\item
-  Fichiers texte non structurés : programmer à l'aide des fonctions de
-  manipulation de chaînes de caractères (package stringr) -- Fonctions
-  utiles : readLines , read\_file du package readr
-\item
-  Fichiers binaires (autres que images, sons, films) : programmer autour
-  du type de données ``raw'' -- Fonctions utiles : open, close, readBin
+  Pour ``modifier'' l'objet, il faut écrire explicitement
 \end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nanopop }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sexe2=}\FunctionTok{as.numeric}\NormalTok{(sexe)) }\OtherTok{{-}\textgreater{}}\NormalTok{ nanopop}
+\end{Highlighting}
+\end{Shaded}
+
+\normalsize
 \end{frame}
 
-\hypertarget{les-vecteurs-1}{%
-\section{Les vecteurs}\label{les-vecteurs-1}}
+\hypertarget{les-bases-du-langage}{%
+\section{Les bases du langage}\label{les-bases-du-langage}}
 
-\begin{frame}[fragile]{Créer un vecteur (1)}
-\protect\hypertarget{cruxe9er-un-vecteur-1}{}
+\begin{frame}[fragile]{Les type élémentaires (atomiques)}
+\protect\hypertarget{les-type-uxe9luxe9mentaires-atomiques}{}
 \begin{itemize}
 \tightlist
 \item
   En R, la structure de données de base est le vecteur : ensemble de
   données qui sont toutes du même ``type'' de base (aussi dit
-  ``atomique''):
+  ``atomique'')
+\item
+  Les types de base en R (\texttt{atomic}):
 
   \begin{itemize}
   \tightlist
   \item
-    booléen : ``logical'',
+    logical
   \item
-    numérique entier : ``integer'',
+    integer
   \item
-    numérique, virgule flottante : ``double'', date : ``date''
+    numeric (double)
   \item
-    numérique complexe : ``complex'',
+    complex
   \item
-    chaîne de caractères : ``character'', facteur : ``factor''
+    character
   \item
-    octet : ``raw''.
+    raw
   \end{itemize}
 \item
   Les données dans ces types de base ne peuvent exister en dehors d'une
   structure de vecteur (principe 3).
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Les types \texttt{integer} et \texttt{numeric}}
+\protect\hypertarget{les-types-integer-et-numeric}{}
+\begin{itemize}
+\tightlist
+\item
+  Numérique, virgule flottante (\texttt{double} ou \texttt{numeric}),
+  base des calculs statistiques
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1
+\end{verbatim}
+
+\normalsize
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OtherTok{\textless{}{-}} \DecValTok{1} 
+\FunctionTok{class}\NormalTok{(a)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "numeric"
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Numérique, entier (« integer ») : un nombre entier de ce type est
+  suivi d'un L.
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b }\OtherTok{\textless{}{-}} \DecValTok{1}\DataTypeTok{L}
+\FunctionTok{class}\NormalTok{(b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "integer"
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Le type \texttt{logical} (booleen)}
+\protect\hypertarget{le-type-logical-booleen}{}
+\begin{itemize}
+\tightlist
+\item
+  Logique/booléen (« logical », résultat des tests)
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\SpecialCharTok{==}\NormalTok{ b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\normalsize
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{c }\OtherTok{\textless{}{-}} \ConstantTok{FALSE}
+\FunctionTok{class}\NormalTok{(c)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "logical"
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Le type \texttt{character}}
+\protect\hypertarget{le-type-character}{}
+\begin{itemize}
+\tightlist
+\item
+  Caractère (« character », chaînes de contenu quelconque, entre simples
+  ou doubles quotes
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{d }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}Je suis une chaîne de caractères\textquotesingle{}}
+\FunctionTok{class}\NormalTok{(d)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "character"
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Les types de données élémentaires: \texttt{raw}}
+\protect\hypertarget{les-types-de-donnuxe9es-uxe9luxe9mentaires-raw}{}
+\begin{itemize}
+\tightlist
+\item
+  Brut (« raw », pour des manipulations au niveau de l'octet)
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{as.raw}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 02
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  La fonction \texttt{charToRaw()} convertit un caractère de longueur 1
+  en \texttt{raw}
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{charToRaw}\NormalTok{(}\StringTok{"a"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 61
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Les vecteurs}
+\protect\hypertarget{les-vecteurs}{}
+\begin{itemize}
+\tightlist
+\item
+  Un donnée d'un des types atomiques ne peut exister qu'au sein d'un
+  \textbf{vecteur}
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OtherTok{\textless{}{-}} \DecValTok{1}
+\FunctionTok{is.vector}\NormalTok{(a)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  L'objet \texttt{a} est un vecteur de longueur 1
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{length}\NormalTok{(a)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  L'objet \texttt{b} est également de type \texttt{numeric}
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{)}
+\FunctionTok{class}\NormalTok{(b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "numeric"
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Sa longueur est de 2
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{length}\NormalTok{(b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Créer un vecteur (1)}
+\protect\hypertarget{cruxe9er-un-vecteur-1}{}
+\begin{itemize}
+\tightlist
 \item
   La plus simple façon de créer un vecteur (de longueur 1) est juste
   d'écrire une constante dans un type de base :
@@ -1418,9 +1417,14 @@ cela revient à faire \texttt{get(42)}
 ## [1] 42
 \end{verbatim}
 
-\normalsize Un vecteur peut être vide, par exemple à la suite d'une
-sélection infructueuse. La notation est le type du vecteur suivi de (0)
-:
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Un vecteur peut être vide, par exemple à la suite d'une sélection
+  infructueuse. La notation est le type du vecteur suivi de (0) :
+\end{itemize}
 
 \tiny
 
@@ -1433,6 +1437,16 @@ sélection infructueuse. La notation est le type du vecteur suivi de (0)
 
 \begin{verbatim}
 ## logical(0)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{length}\NormalTok{(v)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0
 \end{verbatim}
 
 \normalsize
@@ -1489,7 +1503,11 @@ sélection infructueuse. La notation est le type du vecteur suivi de (0)
 
 \normalsize
 
--- de nombreuses autres fonctions : la répétition,
+\begin{itemize}
+\tightlist
+\item
+  de nombreuses autres fonctions : la répétition
+\end{itemize}
 
 \tiny
 
@@ -1503,7 +1521,13 @@ sélection infructueuse. La notation est le type du vecteur suivi de (0)
 ## [1] TRUE TRUE TRUE TRUE TRUE
 \end{verbatim}
 
-\normalsize la fabrication de suite d'entiers consécutifs, etc\ldots{}
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  la fabrication de suite d'entiers consécutifs, etc\ldots{}
+\end{itemize}
 
 \tiny
 
@@ -1564,7 +1588,13 @@ sélection infructueuse. La notation est le type du vecteur suivi de (0)
 ##  [1] 101 102 103 104 105 106 107 108 109 110
 \end{verbatim}
 
-\normalsize par exemple les éléments 3 à 5
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  par exemple les éléments 3 à 5
+\end{itemize}
 
 \tiny
 
@@ -1643,14 +1673,30 @@ sélection infructueuse. La notation est le type du vecteur suivi de (0)
 ## [1] 101 110
 \end{verbatim}
 
-\normalsize - Le crochet ne fait pas de l'indexation, c'est un véritable
-opérateur entre deux vecteurs. - L'intérêt majeur de la sélection par
-vecteur de booléens est que ce vecteur peut provenir d'un calcul
-logique, où on exprime une condition sur les éléments. Cette condition
-peut utiliser n'importe quel élément connu de R, et en particulier le
-vecteur lui-même. - Exemple : une sélection des éléments dont la parité
-(pair/impair) dépend du positionnement d'un paramètre de nom PARITE
-(\%\% est le reste de la division entière)
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Le crochet ne fait pas de l'indexation, c'est un véritable opérateur
+  entre deux vecteurs.
+\item
+  L'intérêt majeur de la sélection par vecteur de booléens est que ce
+  vecteur peut provenir d'un calcul logique, où on exprime une condition
+  sur les éléments. Cette condition peut utiliser n'importe quel élément
+  connu de R, et en particulier le vecteur lui-même.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Accéder aux éléments d'un vecteur (3)}
+\protect\hypertarget{accuxe9der-aux-uxe9luxe9ments-dun-vecteur-3}{}
+\begin{itemize}
+\tightlist
+\item
+  Exemple : une sélection des éléments dont la parité (pair/impair)
+  dépend du positionnement d'un paramètre de nom PARITE (\%\% est le
+  reste de la division entière)
+\end{itemize}
 
 \tiny
 
@@ -1666,10 +1712,1803 @@ vecteur lui-même. - Exemple : une sélection des éléments dont la parité
 \end{verbatim}
 
 \normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  L'opérateur \texttt{\%\%} est appliqué à tous les éléments de
+  \texttt{x}
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{v }\SpecialCharTok{\%\%} \DecValTok{2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 1 0 1 0 1 0 1 0 1 0
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Le test renvoie un vecteur de booléens
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(v }\SpecialCharTok{\%\%} \DecValTok{2}\NormalTok{)}\SpecialCharTok{==}\NormalTok{PARITE}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE
+\end{verbatim}
+
+\normalsize
 \end{frame}
 
-\begin{frame}{Les listes}
+\begin{frame}[fragile]{Utilisation de \texttt{all()} et \texttt{any()}}
+\protect\hypertarget{utilisation-de-all-et-any}{}
+\begin{itemize}
+\tightlist
+\item
+  Création d'un vecteur de nombres pairs
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{12}\NormalTok{,}\DecValTok{2}\NormalTok{)}
+\NormalTok{x }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  2  4  6  8 10 12
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Pour vérifier que tous les nombres sont pairs, on peut utiliser
+  \texttt{all()}
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{all}\NormalTok{(x }\SpecialCharTok{\%\%} \DecValTok{2} \SpecialCharTok{==} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Utilisation de \texttt{all()} et \texttt{any()}}
+\protect\hypertarget{utilisation-de-all-et-any-1}{}
+\begin{itemize}
+\tightlist
+\item
+  Pour tester si un des éléments de \texttt{x} est impair
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{any}\NormalTok{(x }\SpecialCharTok{\%\%} \DecValTok{2} \SpecialCharTok{!=} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  On peut sommer les valeurs booléennes pour obtenir les nombre
+  d'éléments concernés
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{( x }\SpecialCharTok{\textgreater{}} \DecValTok{6}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Le crochet n'est qu'un opérateur}
+\protect\hypertarget{le-crochet-nest-quun-opuxe9rateur}{}
+\begin{itemize}
+\tightlist
+\item
+  Puisque le crochet n'est qu'un opérateur, rien n'interdit d'utiliser
+  autre chose qu'un symbole du coté gauche de l'opérateur, en
+  particulier un résultat d'un appel de fonction
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{50}\NormalTok{,}\DecValTok{5}\NormalTok{)[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  1  6 11 16 21
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Exercice - Extraire une partie d'un vecteur}
+\protect\hypertarget{exercice---extraire-une-partie-dun-vecteur}{}
+\begin{itemize}
+\tightlist
+\item
+  En utilisant le vecteur des 7 jours à partir d'aujourd'hui compris
+  (fonction \texttt{as.Date()} ou \texttt{Sys.Date()}), quels sont les
+  dates dont le jour de la semaine se termine par « di » ?
+\end{itemize}
+
+\tiny
+
+\begin{verbatim}
+## [1] "lundi"    "mardi"    "mercredi" "jeudi"    "vendredi" "samedi"   "dimanche"
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  On pourra utiliser la fonction \texttt{endsWith} ou la fonction
+  \texttt{str\_detect} du package \texttt{stringr} avec une expression
+  régulière
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{La fonction \texttt{which}}
+\protect\hypertarget{la-fonction-which}{}
+\begin{itemize}
+\tightlist
+\item
+  La fonction which permet de faire un pont entre une sélection par
+  booléens ou une sélection par indice : elle restitue les positions des
+  éléments vérifiant une condition.
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{LETTERS}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S"
+## [20] "T" "U" "V" "W" "X" "Y" "Z"
+\end{verbatim}
+
+\normalsize - Position des lettres N à P
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{which}\NormalTok{(LETTERS}\SpecialCharTok{\textgreater{}=}\StringTok{"N"} \SpecialCharTok{\&}\NormalTok{ LETTERS}\SpecialCharTok{\textless{}=}\StringTok{"P"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 14 15 16
+\end{verbatim}
+
+\normalsize - Version plus simple sans `which'
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{length}\NormalTok{(LETTERS[}\FunctionTok{which}\NormalTok{(LETTERS}\SpecialCharTok{\textgreater{}=}\StringTok{"Z"}\NormalTok{)])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1
+\end{verbatim}
+
+\normalsize - \textbf{Attention} : which est souvent utilisée dans des
+contextes où on n'en a pas besoin grâce à la possibilité de sélection
+par booléens
+\end{frame}
+
+\begin{frame}[fragile]{Le recyclage des éléments dans les opérations
+vectorielles (1)}
+\protect\hypertarget{le-recyclage-des-uxe9luxe9ments-dans-les-opuxe9rations-vectorielles-1}{}
+\begin{itemize}
+\tightlist
+\item
+  En R, les opérateurs arithmétiques et logiques ainsi qu'un grand
+  nombre de fonctions dont \texttt{{[}} sont \textbf{vectorisés}
+\item
+  Lorsqu'on doit faire quelque chose sur tous les éléments d'un vecteur,
+  il n'y a pas à penser à répéter la chose sur chaque élément. C'est R
+  qui va se charger de la ``boucle''
+\item
+  Et, avec les architectures modernes (multi-cores, GPUs), il est même
+  possible que les opérations se fassent de façon simultanée !
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Le recyclage des éléments dans les opérations
+vectorielles (2)}
+\protect\hypertarget{le-recyclage-des-uxe9luxe9ments-dans-les-opuxe9rations-vectorielles-2}{}
+\begin{itemize}
+\tightlist
+\item
+  Avec des vecteurs de même longueur
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1}\SpecialCharTok{:}\DecValTok{10} \SpecialCharTok{+} \FunctionTok{rep}\NormalTok{(}\DecValTok{100}\NormalTok{,}\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 101 102 103 104 105 106 107 108 109 110
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Avec deux vecteurs de longueurs différentes, par exemple un calcul
+  impliquant un scalaire et un vecteur
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1}\SpecialCharTok{:}\DecValTok{10} \SpecialCharTok{+} \DecValTok{100}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 101 102 103 104 105 106 107 108 109 110
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  R ``recycle'' le vecteur le plus court pour en faire (virtuellement)
+  un vecteur de la même longueur que le plus long
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1}\SpecialCharTok{:}\DecValTok{10} \SpecialCharTok{+} \FunctionTok{rep}\NormalTok{(}\DecValTok{100}\NormalTok{,}\DecValTok{11}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in 1:10 + rep(100, 11): la taille d'un objet plus long n'est pas
+## multiple de la taille d'un objet plus court
+\end{verbatim}
+
+\begin{verbatim}
+##  [1] 101 102 103 104 105 106 107 108 109 110 101
+\end{verbatim}
+
+\normalsize
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1}\SpecialCharTok{:}\DecValTok{10} \SpecialCharTok{+} \FunctionTok{c}\NormalTok{(}\DecValTok{100}\NormalTok{,}\DecValTok{200}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 101 202 103 204 105 206 107 208 109 210
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Recyclage}
+\protect\hypertarget{recyclage}{}
+\begin{itemize}
+\tightlist
+\item
+  Le code suivant fonctionne :
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dplyr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attachement du package : 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+## Les objets suivants sont masqués depuis 'package:stats':
+## 
+##     filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+## Les objets suivants sont masqués depuis 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mtcars }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(cyl}\SpecialCharTok{==}\StringTok{"6"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 7 x 11
+##     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+##   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+## 1  21       6  160    110  3.9   2.62  16.5     0     1     4     4
+## 2  21       6  160    110  3.9   2.88  17.0     0     1     4     4
+## 3  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1
+## 4  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1
+## 5  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4
+## 6  17.8     6  168.   123  3.92  3.44  18.9     1     0     4     4
+## 7  19.7     6  145    175  3.62  2.77  15.5     0     1     5     6
+\end{verbatim}
+
+\normalsize
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mtcars }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(cyl}\SpecialCharTok{==}\FunctionTok{c}\NormalTok{(}\StringTok{"6"}\NormalTok{,}\StringTok{"4"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 8 x 11
+##     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+##   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+## 1  21       6 160     110  3.9   2.62  16.5     0     1     4     4
+## 2  24.4     4 147.     62  3.69  3.19  20       1     0     4     2
+## 3  17.8     6 168.    123  3.92  3.44  18.9     1     0     4     4
+## 4  32.4     4  78.7    66  4.08  2.2   19.5     1     1     4     1
+## 5  33.9     4  71.1    65  4.22  1.84  19.9     1     1     4     1
+## 6  27.3     4  79      66  4.08  1.94  18.9     1     1     4     1
+## 7  30.4     4  95.1   113  3.77  1.51  16.9     1     1     5     2
+## 8  21.4     4 121     109  4.11  2.78  18.6     1     1     4     2
+\end{verbatim}
+
+\normalsize - La bonne solution
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mtcars }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(cyl }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\StringTok{"6"}\NormalTok{,}\StringTok{"4"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 18 x 11
+##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+##    <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+##  1  21       6 160     110  3.9   2.62  16.5     0     1     4     4
+##  2  21       6 160     110  3.9   2.88  17.0     0     1     4     4
+##  3  22.8     4 108      93  3.85  2.32  18.6     1     1     4     1
+##  4  21.4     6 258     110  3.08  3.22  19.4     1     0     3     1
+##  5  18.1     6 225     105  2.76  3.46  20.2     1     0     3     1
+##  6  24.4     4 147.     62  3.69  3.19  20       1     0     4     2
+##  7  22.8     4 141.     95  3.92  3.15  22.9     1     0     4     2
+##  8  19.2     6 168.    123  3.92  3.44  18.3     1     0     4     4
+##  9  17.8     6 168.    123  3.92  3.44  18.9     1     0     4     4
+## 10  32.4     4  78.7    66  4.08  2.2   19.5     1     1     4     1
+## 11  30.4     4  75.7    52  4.93  1.62  18.5     1     1     4     2
+## 12  33.9     4  71.1    65  4.22  1.84  19.9     1     1     4     1
+## 13  21.5     4 120.     97  3.7   2.46  20.0     1     0     3     1
+## 14  27.3     4  79      66  4.08  1.94  18.9     1     1     4     1
+## 15  26       4 120.     91  4.43  2.14  16.7     0     1     5     2
+## 16  30.4     4  95.1   113  3.77  1.51  16.9     1     1     5     2
+## 17  19.7     6 145     175  3.62  2.77  15.5     0     1     5     6
+## 18  21.4     4 121     109  4.11  2.78  18.6     1     1     4     2
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{La fonction \texttt{paste()}}
+\protect\hypertarget{la-fonction-paste}{}
+\begin{itemize}
+\tightlist
+\item
+  La concaténation de chaînes de caractères se fait avec la fonction
+  \texttt{paste0}
+\item
+  Appliquée à deux vecteurs, elle produit un vecteur de chaînes de
+  caractères :
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{v }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"un"}\NormalTok{,}\StringTok{"deux"}\NormalTok{,}\StringTok{"trois"}\NormalTok{,}\StringTok{"quatre"}\NormalTok{,}\StringTok{"cinq"}\NormalTok{)}
+\NormalTok{w }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}
+\FunctionTok{paste0}\NormalTok{(v,w)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "un1"     "deux2"   "trois3"  "quatre4" "cinq1"
+\end{verbatim}
+
+\normalsize - La fonction originale \texttt{paste} introduit un espace:
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{paste}\NormalTok{(v,w)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "un 1"     "deux 2"   "trois 3"  "quatre 4" "cinq 1"
+\end{verbatim}
+
+\normalsize - L'argument \texttt{collapse} permet de changer le mode de
+fonctionnement : la concaténation produit un vecteur d'un seul élément.
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{paste}\NormalTok{(v, }\AttributeTok{collapse=}\StringTok{";"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "un;deux;trois;quatre;cinq"
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Modifier une partie d'un vecteur (1/3)}
+\protect\hypertarget{modifier-une-partie-dun-vecteur-13}{}
+\begin{itemize}
+\tightlist
+\item
+  Pour modifier une partie d'un vecteur on fera par exemple :
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{v }\OtherTok{\textless{}{-}} \DecValTok{101}\SpecialCharTok{:}\DecValTok{110}
+\NormalTok{v[}\DecValTok{3}\SpecialCharTok{:}\DecValTok{5}\NormalTok{] }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{v}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 101 102   0   0   0 106 107 108 109 110
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Un vecteur est extensible à souhait, R complète les trous :
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{v[}\DecValTok{12}\NormalTok{] }\OtherTok{\textless{}{-}} \DecValTok{12}
+\NormalTok{v}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 101 102   0   0   0 106 107 108 109 110  NA  12
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Modifier une partie d'un vecteur (2/3)}
+\protect\hypertarget{modifier-une-partie-dun-vecteur-23}{}
+\begin{itemize}
+\tightlist
+\item
+  En R, on ne peut pas modifier un objet !
+\item
+  Or dans l'écriture \texttt{v{[}3:5{]}\ \textless{}-\ 0}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    une partie du vecteur semble ``recevoir'' la valeur 0 comme s'il
+    s'agissait de cases mémoire dans un langage classique,
+  \item
+    l'assignation \texttt{\textless{}-} ne semble pas du tout être ici
+    l'association d'un nom à une valeur : v{[}3:5{]} n'est pas un
+    symbole.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Modifier une partie d'un vecteur (3/3)}
+\protect\hypertarget{modifier-une-partie-dun-vecteur-33}{}
+\begin{itemize}
+\tightlist
+\item
+  En fait cette écriture est un leurre, et sous une apparence
+  d'instruction d'affectation de langage de programmation classique,
+  elle cache deux choses :
+
+  \begin{itemize}
+  \tightlist
+  \item
+    le recours à une nouvelle fonction, de nom un peu particulier
+    {[}\textless-, qui se charge de construire un (nouveau) vecteur
+    modifié, et joue en quelque sorte le rôle d'une fonction d'écriture
+    de données, alors que la fonction {[} réalise la fonction de
+    lecture,
+  \item
+    un raccourci pour une situation classique. Quand on veut, en R,
+    modifier un objet associé à un symbole :
+
+    \begin{enumerate}
+    \tightlist
+    \item
+      on crée une copie modifiée de l'objet indiqué par le symbole,
+    \item
+      on réassigne le symbole à ce nouvel objet.
+    \end{enumerate}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Supprimer des éléments d'un vecteur}
+\protect\hypertarget{supprimer-des-uxe9luxe9ments-dun-vecteur}{}
+\begin{itemize}
+\tightlist
+\item
+  En revanche on ne peut pas éliminer un élément d'un vecteur.
+\item
+  Mais il est possible de sélectionner tous les éléments sauf celui
+  qu'on voudrait éliminer, ce qui revient au même si on appelle le
+  résultat du même nom que l'original.
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{v }\OtherTok{\textless{}{-}}\NormalTok{ v[}\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{]}
+\NormalTok{v}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 101   0   0   0 106 107 108 109 110  NA  12
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Les matrices (1)}
+\protect\hypertarget{les-matrices-1}{}
+\begin{itemize}
+\tightlist
+\item
+  Pour les besoins des calculs scientifiques, les matrices existent en R
+  sous forme d'une spécialisation de la représentation en vecteur
+\item
+  Pour créer une matrice on peut commencer par créer un vecteur puis on
+  spécifie les dimensions de la matrice en utilisant la forme
+  ``réversible'' de la fonction \texttt{dim} : \texttt{dim\textless{}-}
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{9}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{7}\NormalTok{)}
+\FunctionTok{dim}\NormalTok{(m) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{5}\NormalTok{)}
+\NormalTok{m}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    0    4    3    0    2
+## [2,]    5    9    0    1    7
+\end{verbatim}
+
+\normalsize - Une matrice peut avoir plus de deux dimensions
+\end{frame}
+
+\begin{frame}[fragile]{Accès aux éléments d'une matrice}
+\protect\hypertarget{accuxe8s-aux-uxe9luxe9ments-dune-matrice}{}
+\begin{itemize}
+\tightlist
+\item
+  Les crochets permettent d'accéder à des éléments ou des portions d'une
+  matrice qui seront soit des vecteurs soit des matrices :
+
+  \begin{itemize}
+  \tightlist
+  \item
+    un seul élément
+  \end{itemize}
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m[}\DecValTok{2}\NormalTok{,}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 7
+\end{verbatim}
+
+\normalsize - une ligne
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m[}\DecValTok{2}\NormalTok{,]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5 9 0 1 7
+\end{verbatim}
+
+\normalsize - une colonne
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m[,}\DecValTok{2}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 4 9
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Sélection des éléments d'une matrice avec des
+booléens}
+\protect\hypertarget{suxe9lection-des-uxe9luxe9ments-dune-matrice-avec-des-booluxe9ens}{}
+\begin{itemize}
+\tightlist
+\item
+  Les opérateurs de comparaison \texttt{\textgreater{}},
+  \texttt{\textgreater{}=}, `==', \texttt{!=} s'appliquent à chaque
+  élément de la matrice
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m}\SpecialCharTok{\textgreater{}}\DecValTok{4}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       [,1]  [,2]  [,3]  [,4]  [,5]
+## [1,] FALSE FALSE FALSE FALSE FALSE
+## [2,]  TRUE  TRUE FALSE FALSE  TRUE
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  On peut les utiliser pour sélectionner des parties de la matrice
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m[m}\SpecialCharTok{\textgreater{}}\DecValTok{4}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5 9 7
+\end{verbatim}
+
+\normalsize - Le résultat est un vecteur
+\end{frame}
+
+\begin{frame}[fragile]{Opérations sur les matrices}
+\protect\hypertarget{opuxe9rations-sur-les-matrices}{}
+\begin{itemize}
+\tightlist
+\item
+  Opération entre une matrice et une valeur unique
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\SpecialCharTok{*} \DecValTok{2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    0    8    6    0    4
+## [2,]   10   18    0    2   14
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Opération entre deux matrices
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\SpecialCharTok{{-}}\NormalTok{ m}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    0    0    0    0    0
+## [2,]    0    0    0    0    0
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Les fonctions \texttt{rowSums} et
+\texttt{colSums}}
+\protect\hypertarget{les-fonctions-rowsums-et-colsums}{}
+\begin{itemize}
+\tightlist
+\item
+  Somme des lignes
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{rowSums}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  9 22
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Somme des colonnes
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{colSums}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  5 13  3  1  9
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Sélection
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m[, }\FunctionTok{colSums}\NormalTok{(m)}\SpecialCharTok{\textgreater{}}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      [,1] [,2]
+## [1,]    4    2
+## [2,]    9    7
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Les listes}
 \protect\hypertarget{les-listes}{}
+\begin{itemize}
+\tightlist
+\item
+  Une liste est une collection d'objets qui peuvent être de types
+  \textbf{différents}
+\item
+  On crée une liste avec la fonction \texttt{list()}. Une liste peut
+  être vide : \texttt{list()}.
+\item
+  Les éléments d'une liste peuvent être nommés. Cela simplifiera l'accès
+  ultérieur en précisant des noms et non des positions
+\item
+  La liste ci-dessous contient des champs des types élémentaires du
+  langage R: double, entier, booléen, chaîne de caractères, fonction e
+  liste. Trois des champs sont nommés : a, f, l. Les autres ne seront
+  accessibles que par leur position.
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{liste }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{a=}\DecValTok{1}\NormalTok{, }\DecValTok{3}\DataTypeTok{L}\NormalTok{, }\StringTok{"a"}\NormalTok{, }\ConstantTok{TRUE}\NormalTok{, }\AttributeTok{f=}\NormalTok{sum, }\AttributeTok{l=}\FunctionTok{list}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Utilisation des listes en R}
+\protect\hypertarget{utilisation-des-listes-en-r}{}
+\begin{itemize}
+\tightlist
+\item
+  La liste est la structure de données la plus importante de R car elle
+  permet de mémoriser n'importe quelle information complexe.
+\item
+  Elle est à la source de la définition de nombreux types de données :
+  \textbf{data frames}, \textbf{objets graphiques}, \textbf{résultats de
+  régression}, \ldots{}
+\item
+  Ces types de données sont souvent accompagnés d'une redéfinition de la
+  fonction d'impression/affichage à l'écran qui cache la structure
+  interne en produisant une ``belle'' sortie.
+\item
+  Pour connaître la structure interne, il faut alors utiliser la
+  fonction \texttt{str()} qui affiche un descriptif détaillé.
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(liste)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## List of 6
+##  $ a: num 1
+##  $  : int 3
+##  $  : chr "a"
+##  $  : logi TRUE
+##  $ f:function (..., na.rm = FALSE)  
+##  $ l:List of 2
+##   ..$ : num 1
+##   ..$ : num 2
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Accès aux éléments d'une liste}
+\protect\hypertarget{accuxe8s-aux-uxe9luxe9ments-dune-liste}{}
+\begin{itemize}
+\tightlist
+\item
+  Deux opérateurs (cf.~principe numéro 4) sont disponibles pour accéder
+  à un seul élément d'une liste :
+
+  \begin{itemize}
+  \tightlist
+  \item
+    le double crochet \texttt{{[}{[}...{]}{]}}, avec :
+
+    \begin{itemize}
+    \tightlist
+    \item
+      soit un numéro d'élément (surtout en l'absence de noms)
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{liste[[}\DecValTok{5}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## function (..., na.rm = FALSE)  .Primitive("sum")
+\end{verbatim}
+
+\normalsize
+
+\begin{verbatim}
+- soit un nom d’élément (quand la liste contient des éléments nommés),
+\end{verbatim}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{liste[[}\StringTok{"f"}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## function (..., na.rm = FALSE)  .Primitive("sum")
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  le \texttt{\$} qui n'évalue pas son argument de droite (qui doit être
+  un nom) et ne permet donc pas de paramétrer l'élément à récupérer
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{liste}\SpecialCharTok{$}\NormalTok{f}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## function (..., na.rm = FALSE)  .Primitive("sum")
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Accéder à une partie d'une liste}
+\protect\hypertarget{accuxe9der-uxe0-une-partie-dune-liste}{}
+\begin{itemize}
+\tightlist
+\item
+  L'opérateur simple crochet permet d'extraire une partie d'une liste
+  systématiquement sous forme de liste, même lorsqu'il n'y a qu'un seul
+  élément.
+\item
+  Le fonctionnement est similaire à l'opérateur sur les vecteurs. On a
+  le choix entre lui fournir :
+
+  \begin{itemize}
+  \tightlist
+  \item
+    un vecteur de nombres, éventuellement tous négatifs,
+  \end{itemize}
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{liste[}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $f
+## function (..., na.rm = FALSE)  .Primitive("sum")
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  un vecteur de booléens,
+\item
+  un vecteur de noms d'éléments.
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{liste[}\SpecialCharTok{{-}}\DecValTok{1}\SpecialCharTok{:{-}}\DecValTok{4}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $f
+## function (..., na.rm = FALSE)  .Primitive("sum")
+## 
+## $l
+## $l[[1]]
+## [1] 1
+## 
+## $l[[2]]
+## [1] 2
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{« Modifier » une liste}
+\protect\hypertarget{modifier-une-liste}{}
+\begin{itemize}
+\tightlist
+\item
+  Les opérateurs \texttt{{[}{[}} et \texttt{\$} sont ``réversibles''. On
+  peut ainsi positionner un élément dans une liste par sa position ou
+  son nom avec \texttt{{[}{[}\textless{}-}, ou par son nom
+  \texttt{\$\textless{}-}
+\item
+  Dans l'exemple ci-dessous, on ajoute un 4 ème élément, le troisième
+  est indéfini
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{liste }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{)}
+\NormalTok{liste[[}\DecValTok{2}\NormalTok{]]}\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\DecValTok{1}
+\NormalTok{liste[[}\DecValTok{4}\NormalTok{]]}\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\DecValTok{2}
+\NormalTok{liste}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [[1]]
+## [1] 1
+## 
+## [[2]]
+## [1] -1
+## 
+## [[3]]
+## NULL
+## 
+## [[4]]
+## [1] -2
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Pour ajouter un élément à unbe liste, celle-ci doit préalablement
+  exister
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{liste2 }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{()}
+\NormalTok{liste2}\SpecialCharTok{$}\NormalTok{a }\OtherTok{\textless{}{-}} \DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Convertir une liste en vecteur : \texttt{unlist}
+(1)}
+\protect\hypertarget{convertir-une-liste-en-vecteur-unlist-1}{}
+\begin{itemize}
+\tightlist
+\item
+  Lorsque tous les éléments d'une liste sont de même type, la fonction
+  \texttt{unlist} permet de construire un vecteur en ``écrasant'' tous
+  les éléments de la liste.
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{list}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{unlist}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1 2 3
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Ici les éléments sont convertis en chaîne de caractère
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{list}\NormalTok{(}\DecValTok{1}\NormalTok{, }\StringTok{"a"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{unlist}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "1" "a"
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Listes imbriquées
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{list}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FunctionTok{list}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{unlist}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1 2 3
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Convertir une liste en vecteur : \texttt{unlist}
+(2)}
+\protect\hypertarget{convertir-une-liste-en-vecteur-unlist-2}{}
+\begin{itemize}
+\tightlist
+\item
+  Lorsque les éléments de la liste sont nommés, les éléments du vecteur
+  résultat sont - par défaut (voir paramètre ad'hoc) - également nommés
+  (comme pour les éléments d'une liste, les élements d'un vecteur
+  peuvent être nommés)
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{list}\NormalTok{(}\AttributeTok{a=}\DecValTok{1}\NormalTok{, }\AttributeTok{b=}\DecValTok{2}\NormalTok{, }\AttributeTok{c=}\DecValTok{3}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{unlist}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## a b c 
+## 1 2 3
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Stockage des listes en mémoire (1)}
+\protect\hypertarget{stockage-des-listes-en-muxe9moire-1}{}
+\begin{itemize}
+\tightlist
+\item
+  En mémoire la structure de liste n'est guère différente de celle d'un
+  vecteur afin de permettre le même type d'accès aléatoire.
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{liste }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{a=}\DecValTok{1}\NormalTok{,}\AttributeTok{b=}\DecValTok{2}\NormalTok{)}
+\FunctionTok{is.vector}\NormalTok{(liste)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Utilisation de \texttt{inspect} pour afficher les attributs internes
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(pryr)}
+
+\FunctionTok{inspect}\NormalTok{(liste)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## <VECSXP 0x564cf60430e8>
+##   <REALSXP 0x564cf43484f8>
+##   <REALSXP 0x564cf4348530>
+## attributes: 
+##   <LISTSXP 0x564cf4903428>
+##   tag: 
+##     <SYMSXP 0x564cebd878d0>
+##   car: 
+##     <STRSXP 0x564cf6043128>
+##       <CHARSXP 0x564cec08c7b0>
+##       <CHARSXP 0x564cec31e928>
+##   cdr: 
+##     NULL
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}{Stockage des listes en mémoire (2)}
+\protect\hypertarget{stockage-des-listes-en-muxe9moire-2}{}
+\begin{itemize}
+\tightlist
+\item
+  Mais d'autres éléments de R nécessitent une structure de liste : un
+  programme est une liste d'appels de fonctions.
+\item
+  Pour ses besoins internes, R utilise une structure de liste (« pair
+  list ») formée de cellules chaînées entre-elle, directement héritée de
+  LISP. Chaque cellule a un « tag » spécifiant son contenu, un « car »
+  donnant le contenu et « cdr » indiquant la suite de la liste.
+\item
+  La navigation dans ce type de structure n'est pas possible sans
+  recours aux fonctions internes, mais des conversions sont possibles
+  avec la fonction as.list.
+\end{itemize}
+\end{frame}
+
+\hypertarget{importer-des-donnuxe9es-en-r}{%
+\section{Importer des données en R}\label{importer-des-donnuxe9es-en-r}}
+
+\begin{frame}[fragile]{Types de données (1)}
+\protect\hypertarget{types-de-donnuxe9es-1}{}
+\begin{itemize}
+\tightlist
+\item
+  Données tabulaires (lignes x colonnes avec au croisement une donnée «
+  élémentaire »)
+\item
+  \texttt{import} du package \texttt{rio} : l'outil tous terrains en
+  fonction du suffixe
+\item
+  Paramétrage spécifique pour cas particulier : suivre la piste rio, la
+  documentation indique le package utilisé (donc préconisé) et ses
+  options
+\item
+  \texttt{read.fwf} pour les formats à largeur de champ fixe
+\item
+  \texttt{read.csv} pour les fichiers \texttt{.csv} avec un séparateur
+  \texttt{,}ou \texttt{;}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Types de données (2)}
+\protect\hypertarget{types-de-donnuxe9es-2}{}
+\begin{itemize}
+\tightlist
+\item
+  Données structurées non tabulaires : un peu de programmation autour de
+  packages standard (cf.~rio)
+\item
+  Classeurs XLSX de plus d'une feuille
+\item
+  Fichiers XML : packages XML, xml2
+\item
+  Fichiers texte non structurés : programmer à l'aide des fonctions de
+  manipulation de chaînes de caractères (package stringr)
+\item
+  Fonctions utiles : readLines , read\_file du package readr
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Types de données (3)}
+\protect\hypertarget{types-de-donnuxe9es-3}{}
+\begin{itemize}
+\tightlist
+\item
+  Fichiers binaires (autres que images, sons, films) : programmer autour
+  du type de données ``raw''
+\item
+  Fonctions utiles : open, close, readBin
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Exemple: Prix des carburtants}
+\protect\hypertarget{exemple-prix-des-carburtants}{}
+\begin{itemize}
+\tightlist
+\item
+  Un fichier réel de mise à disposition d'informations sur les points de
+  vente de carburant :
+
+  \begin{itemize}
+  \tightlist
+  \item
+    localisation
+  \item
+    période d'ouverture
+  \item
+    services annexes
+  \item
+    historique des prix
+  \end{itemize}
+\end{itemize}
+
+\tiny
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Lecture du fichier}
+\protect\hypertarget{lecture-du-fichier}{}
+\begin{itemize}
+\tightlist
+\item
+  On lit l'intégralité du fichier avec la fonction \texttt{readLines()}
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{con }\OtherTok{\textless{}{-}} \FunctionTok{file}\NormalTok{(}\StringTok{"../data/PrixCarburants\_quotidien\_20231211.xml"}\NormalTok{, }\AttributeTok{encoding =} \StringTok{"latin1"}\NormalTok{)}
+\NormalTok{carburants }\OtherTok{\textless{}{-}} \FunctionTok{readLines}\NormalTok{(con)}
+\FunctionTok{close}\NormalTok{(con)}
+\FunctionTok{unique}\NormalTok{(}\FunctionTok{Encoding}\NormalTok{(carburants))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "unknown" "UTF-8"
+\end{verbatim}
+
+\normalsize - Le résultat est un (très long) vecteur
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(carburants)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>"                     
+## [2] "<pdv_liste>"                                                                            
+## [3] "  <pdv id=\"1000001\" latitude=\"4620100\" longitude=\"519800\" cp=\"01000\" pop=\"R\">"
+## [4] "    <adresse>596 AVENUE DE TREVOUX</adresse>"                                           
+## [5] "    <ville>SAINT-DENIS-LèS-BOURG</ville>"                                               
+## [6] "    <horaires automate-24-24=\"\">"
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Sélection des lignes}
+\protect\hypertarget{suxe9lection-des-lignes}{}
+\begin{itemize}
+\tightlist
+\item
+  Avec la fonction str\_detect de stringr, ne conserver que les lignes
+  contenant `pdv' (avec un espace à la fin, donc ne contenant pas
+  `pdv\_liste').
+\item
+  str\_detect est une fonction qui accepte une expression régulière mais
+  nous n'en avons pas besoin ici.
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(stringr)}
+\NormalTok{carburants }\OtherTok{\textless{}{-}}\NormalTok{ carburants[}\FunctionTok{str\_detect}\NormalTok{(carburants, }\StringTok{"pdv "}\NormalTok{)]}
+\FunctionTok{head}\NormalTok{(carburants)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "  <pdv id=\"1000001\" latitude=\"4620100\" longitude=\"519800\" cp=\"01000\" pop=\"R\">"
+## [2] "  <pdv id=\"1000002\" latitude=\"4621842\" longitude=\"522767\" cp=\"01000\" pop=\"R\">"
+## [3] "  <pdv id=\"1000004\" latitude=\"4618800\" longitude=\"524500\" cp=\"01000\" pop=\"R\">"
+## [4] "  <pdv id=\"1000007\" latitude=\"4622100\" longitude=\"524500\" cp=\"01000\" pop=\"R\">"
+## [5] "  <pdv id=\"1000008\" latitude=\"4619900\" longitude=\"524100\" cp=\"01000\" pop=\"R\">"
+## [6] "  <pdv id=\"1000009\" latitude=\"4619600\" longitude=\"522900\" cp=\"01000\" pop=\"R\">"
+\end{verbatim}
+
+\normalsize - Avec la fonction \texttt{str\_replace\_all}, éliminer :
+\texttt{\textless{}pdv} espaces avant, un après), les
+\texttt{\textgreater{}} , les double quotes
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{carburants }\OtherTok{\textless{}{-}} \FunctionTok{str\_replace\_all}\NormalTok{(carburants,}\StringTok{"  \textless{}pdv "}\NormalTok{ , }\StringTok{""}\NormalTok{)}
+\NormalTok{carburants }\OtherTok{\textless{}{-}} \FunctionTok{str\_replace\_all}\NormalTok{(carburants, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{"}\NormalTok{, }\StringTok{""}\NormalTok{)}
+\FunctionTok{head}\NormalTok{(carburants)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "id=\"1000001\" latitude=\"4620100\" longitude=\"519800\" cp=\"01000\" pop=\"R\">"
+## [2] "id=\"1000002\" latitude=\"4621842\" longitude=\"522767\" cp=\"01000\" pop=\"R\">"
+## [3] "id=\"1000004\" latitude=\"4618800\" longitude=\"524500\" cp=\"01000\" pop=\"R\">"
+## [4] "id=\"1000007\" latitude=\"4622100\" longitude=\"524500\" cp=\"01000\" pop=\"R\">"
+## [5] "id=\"1000008\" latitude=\"4619900\" longitude=\"524100\" cp=\"01000\" pop=\"R\">"
+## [6] "id=\"1000009\" latitude=\"4619600\" longitude=\"522900\" cp=\"01000\" pop=\"R\">"
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Exercice : Utilisation des expressions régulières
+(1)}
+\protect\hypertarget{exercice-utilisation-des-expressions-ruxe9guliuxe8res-1}{}
+\begin{itemize}
+\tightlist
+\item
+  Les expressions régulières sont un outil de test de chaînes de
+  caractères permettant de reconnaître la présence d'un ensemble de
+  chaînes possibles grâce à une syntaxe spécifique : un des caractères
+  \texttt{\^{}\ \$\ .\ *\ +\ ?\ \textbar{}\ (\ )\ {[}\ {]}\ \{\ \}\ \textbackslash{}}
+\item
+  La fonction \texttt{str\_detect} du package \texttt{stringr} est une
+  des fonctions réalisant ce genre de tests : elle cherche si son
+  premier argument contient quelque chose ressemblant à son second
+  argument et répond vrai ou faux.
+\item
+  Le premier argument peut être un vecteur, le résultat sera un vecteur
+  de booléens.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Exercice : Utilisation des expressions régulières
+(2)}
+\protect\hypertarget{exercice-utilisation-des-expressions-ruxe9guliuxe8res-2}{}
+\begin{itemize}
+\tightlist
+\item
+  Les éléments de syntaxe les plus fréquemment utilisés :
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str\_detect}\NormalTok{(arg,}\StringTok{"\^{}0"}\NormalTok{) }\CommentTok{\# commence par ‘0’}
+\FunctionTok{str\_detect}\NormalTok{(arg,}\StringTok{"0$"}\NormalTok{) }\CommentTok{\# se termine par ‘0’}
+\FunctionTok{str\_detect}\NormalTok{(arg,}\StringTok{"\^{}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{$"}\NormalTok{) }\CommentTok{\# commence par ‘$’ non interprété}
+
+\FunctionTok{str\_detect}\NormalTok{(arg,}\StringTok{"\^{}.0"}\NormalTok{) }\CommentTok{\# commence par n’importe quel caractère puis un 0}
+\FunctionTok{str\_detect}\NormalTok{(arg,}\StringTok{"\^{}[1{-}6]"}\NormalTok{) }\CommentTok{\# commence par un caractère de ‘1’ à ‘6’}
+\FunctionTok{str\_detect}\NormalTok{(arg,}\StringTok{"\^{}[1{-}68]"}\NormalTok{) }\CommentTok{\# commence par un caractère de ‘1’ à ‘6’ ou un ‘8’}
+\FunctionTok{str\_detect}\NormalTok{(arg,}\StringTok{"\^{}[\^{}1{-}6]"}\NormalTok{) }\CommentTok{\# commence par tout sauf un caractère de ‘1’ à ‘6’}
+\FunctionTok{str\_detect}\NormalTok{(arg,}\StringTok{"\^{}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d"}\NormalTok{) }\CommentTok{\# commence par un chiffre décimal}
+
+\FunctionTok{str\_detect}\NormalTok{(arg,}\StringTok{"\^{}.*9"}\NormalTok{) }\CommentTok{\# commence par 0 et + caractères quelconques puis un 9}
+\FunctionTok{str\_detect}\NormalTok{(arg,}\StringTok{"\^{}.+9"}\NormalTok{) }\CommentTok{\# commence par 1 et + caractères quelconques puis un 9}
+\FunctionTok{str\_detect}\NormalTok{(arg,}\StringTok{"\^{}01?"}\NormalTok{) }\CommentTok{\# commence par 0 et éventuellement un 1}
+\FunctionTok{str\_detect}\NormalTok{(arg,}\StringTok{"\^{}0(19)?"}\NormalTok{) }\CommentTok{\# commence par 0 et éventuellement le groupe ‘19’}
+\FunctionTok{str\_detect}\NormalTok{(arg,}\StringTok{"\^{}(19|20)"}\NormalTok{)}\CommentTok{\# commence par ‘19’ ou ‘20’}
+\end{Highlighting}
+\end{Shaded}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Exercice}
+\protect\hypertarget{exercice-1}{}
+\begin{itemize}
+\tightlist
+\item
+  Avec la fonction str\_split, éclater la colonne issue du data.frame
+  précédent pour séparer en une liste de couples nom=valeur.
+\item
+  Afficher la structure de la première ligne de la table résultat.
+\item
+  La table obtenue précédemment n'est pas « propre » (des données non
+  élémentaires dans la dernière colonne).
+\item
+  Avec la fonction \texttt{unnest} de \texttt{tidyr}, répartir la
+  nouvelle colonne de type liste sur plusieurs lignes.
+\item
+  Avec la fonction \texttt{separate}, séparer les deux composants des
+  couples nom=valeur dans deux nouvelles colonnes.
+\item
+  Le résultat peut être considéré comme une table en format long : un
+  colonne indique le nom de la donnée, une autre la valeur. Mettre le
+  résultat en format « large » (fonction spread ou équivalent): une
+  colonne par modalité du nom.
+\item
+  Avec la fonction \texttt{gf\_point} de \texttt{ggformula}, faire une
+  carte des latitudes - longitudes, en les ayant préalablement
+  converties en numérique.
+\end{itemize}
+\end{frame}
+
+\hypertarget{programmation-avec-r}{%
+\section{Programmation avec R}\label{programmation-avec-r}}
+
+\begin{frame}{Introduction}
+\protect\hypertarget{introduction-1}{}
+\begin{itemize}
+\tightlist
+\item
+  Le statique: les données
+
+  \begin{enumerate}
+  \tightlist
+  \item
+    Pas de variables, mais des \textbf{objets} et des \textbf{symboles}
+    2, Un objet n'est \textbf{plus modifiable} après sa création
+  \item
+    Les données des types de base n'existent qu'au sein de
+    \textbf{vecteurs}
+  \end{enumerate}
+\item
+  Le dynamique: les fonctions
+
+  \begin{enumerate}
+  \setcounter{enumi}{3}
+  \tightlist
+  \item
+    Une fonction derrière toute opération
+  \item
+    Une fonction est une forme particulière d'objet
+  \item
+    Toute fonction peut être surchargée
+  \item
+    Chaque fonction est libre d'interpréter ses arguments comme elle le
+    veut
+  \end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Quelques principes de programmation (1)}
+\protect\hypertarget{quelques-principes-de-programmation-1}{}
+\begin{itemize}
+\tightlist
+\item
+  Commencez petit: -Pour résoudre un problème `truc', ne pas commencer
+  par écrire `truc \textless- function\ldots{}'.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Mais commencer par décomposer le problème en sous questions
+    élémentaires et ensuite commencer par coder et tester ses
+    sous-questions.
+  \item
+    L'assemblage n'est que la dernière étape.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Quelques principes de programmation (2)}
+\protect\hypertarget{quelques-principes-de-programmation-2}{}
+\begin{itemize}
+\tightlist
+\item
+  Écrivez des petites fonctions.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Une fonction pour chaque opération élémentaire : ne pas tenter de
+    faire plusieurs choses disjointes dans une même fonction.
+  \item
+    Le code d'une fonction doit tenir sur un seul écran pour permettre
+    d'en suivre la logique de déroulement sans toucher au clavier et à
+    la souris.
+  \item
+    Les fonctions potentiellement neutres (accolades, return) ne sont
+    pas de bons amis quand elle sont sur-utilisées.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Quelques principes de programmation (3)}
+\protect\hypertarget{quelques-principes-de-programmation-3}{}
+\begin{itemize}
+\tightlist
+\item
+  Faites la chasse aux clones.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Ne JAMAIS dupliquer de code : cela alourdit le programme et
+    introduit un point de faiblesse en cas de modification ultérieure.\\
+  \end{itemize}
+\item
+  Factoriser au maximum.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    R permet une grande souplesse dans les arguments des fonctions :des
+    codes presque identiques peuvent toujours être réduits à l'usage
+    d'une unique fonction.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Quelques principes de programmation (4)}
+\protect\hypertarget{quelques-principes-de-programmation-4}{}
+\begin{itemize}
+\item
+  Respectez la symétrie. Si le problème à traiter présente une forme de
+  symétrie, celle-ci doit se retrouver dans le code, sinon c'est un
+  indice de cas mal couverts. -Ne vous préoccupez pas d'optimisation,
+  sauf dans les cas critiques -Testez Commencer par les cas extrêmes.
+  Les autres ont plus de chances de fonctionner.
+\item
+  Adoptez un style et tenez vous y.
+\item
+  Il y a plusieurs façons d'écrire du R, de nommer ses objets ou de
+  présenter les programmes.
+\item
+  Ne mélangez les patois R qu'en cas de nécessité.
+\item
+  Un nom d'objet parlant évite bien des commentaires.
+\item
+  Décrivez ce que font vos fonctions.
+\item
+  Commentez les passages difficiles.
+\item
+  Mais uniquement les passages difficiles : un commentaire de type
+  paraphrase alourdit les programmes et floute la vision.
+\item
+  Soignez l'esthétique ! Votre programme est votre bébé : gardez le
+  propre, bien proportionné et beau. Plus il sera beau plus il sera
+  attachant et incitera à lire votre code ou à lui faire confiance.
+\end{itemize}
+\end{frame}
+
+\hypertarget{duxe9finir-des-fonctions}{%
+\section{Définir des fonctions}\label{duxe9finir-des-fonctions}}
+
+\begin{frame}[fragile]{Création d'une fonction}
+\protect\hypertarget{cruxe9ation-dune-fonction}{}
+\begin{enumerate}
+\tightlist
+\item
+  Lister les noms des paramètres de la fonction
+\item
+  Ecrire une expression utilisant ces paramètres
+\item
+  Donner un nom à la fonction
+\item
+  Exécuter le code donnant la définition pour créer la fonction dans
+  l'environnement courant
+\end{enumerate}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Somme }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(début,fin)}
+  \FunctionTok{sum}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{)}\SpecialCharTok{*}\NormalTok{(début}\SpecialCharTok{:}\NormalTok{fin)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\normalsize
+
+\begin{enumerate}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Utilisation de la fonction
+\end{enumerate}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{Somme}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{100}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5050
+\end{verbatim}
+
+\normalsize
 \end{frame}
 
 \end{document}

@@ -20,6 +20,7 @@ urlcolor: blue
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, tidy=TRUE)
+options(width = 80)
 summarytools::st_options(plain.ascii = FALSE, style = "rmarkdown")
 
 def.chunk.hook  <- knitr::knit_hooks$get("chunk")
@@ -39,6 +40,11 @@ knitr::knit_hooks$set(chunk = function(x, options) {
 - Gérer les paramètres d'une fonction
 
 
+## Supports
+
+
+
+
 ## Prérequis
 
 - Savoir travailler en R : RStudio ou Rgui
@@ -53,95 +59,27 @@ statistiques
 - Savoir faire un graphique simple (courbe, graphique en barre)
 
 
-# Les bases du langage (rappels)
+# Les principes du langage R
 
-## Les type élémentaires (atomiques)
+## Objets et classes 
 
-- Les types de base en R (`atomic`):
-  - logical
-  - integer
-  - numeric (double)
-  - complex
-  - character
-  - raw
-
-## Les types `integer` et `numeric`
-
-- Numérique, virgule flottante (`double` ou `numeric`), base des calculs statistiques
+- En R tout est **objet**
+- Chaque objet a une (ou plusieurs) classes
+- La fonction `class()` renvoie la classe d'un objet
 ```{r}
-1
-```
-```{r}
-a <- 1 
+a <- 1
 class(a)
 ```
 
-- Numérique, entier (« integer ») : un nombre entier de ce type est suivi d’un L.
+- Ce sont les fonctions génériques (voir plus loin) qui permettent ensuite d’associer un comportement à une
+classe
+
+- La classe d'un objet est **modifiable**
+´
 ```{r}
-b <- 1L
-class(b)
+class(a) <- c("truc","machin")
+class(a)
 ```
-
-## Le type `logical` (booleen)
-
-- Logique/booléen (« logical », résultat des tests)
-```{r}
-a == b
-```
-```{r}
-c <- FALSE
-class(c)
-```
-
-## Le type `character` 
-
-- Caractère (« character », chaînes de contenu quelconque, entre simples ou doubles quotes
-
-```{r}
-d <- 'Je suis une chaîne de caractères'
-class(d)
-```
-
-
-## Les types de données élémentaires: `raw`
-
-- Brut (« raw », pour des manipulations au niveau de l’octet)
-```{r}
-as.raw(2)
-```
-
-- La fonction `charToRaw()` convertit un caractère de longueur 1 en `raw`
-
-```{r}
-charToRaw("a")
-```
-
-## Les vecteurs
-
-- Un donnée d’un des types atomiques ne peut exister qu’au sein d’un **vecteur**
-```{r}
-a <- 1
-is.vector(a)
-```
-
-- L'objet `a` est un vecteur de longueur 1
-
-```{r}
-length(a)
-```
-
-- L'objet `b` est également de type `numeric`
-
-```{r}
-b <- c(1,2)
-class(b)
-```
-
-- Sa longueur est de 2
-```{r}
-length(b)
-```
-
 
 ## Stockage des objets
 
@@ -156,40 +94,41 @@ d
 storage.mode(d)
 ```
 
-## Classe d'un objet
-
-- La fonction `class()` renvoie la façon dont pourront être utilisées les données (méthodes)
+- Pour les types de base, classe et stockage sont 
 ```{r}
-class(d)
+i <- 12L
+storage.mode(i)
 ```
 
-- Un objet peut avoir plusieurs classes (héritage), la fonction `class()` peut renvoyer un vecteur 
 
-- Ce sont les fonctions génériques (voir plus loin) qui permettent ensuite d’associer un comportement à une
-classe
 
-## Constantes et symboles
+## Constantes et symboles (1)
 
 - Commençant par des chiffres, ou un point suivi de chiffres : un nombre (`numeric`, `double`)
 ```{r}
 12
 ```
+
 - Commençant par des quotes simples (') ou doubles (") : une chaîne de caractères
 ```{r}
 'abcd'
 ```
+
+## Constantes et symboles (2)
+
 - Pas de quotes, commençant par une lettre ou un point, suivi de lettres, chiffres, points, ou blanc soulignés : le nom de quelque chose, un « symbole » dont la signification peut varier
 ```{r}
 sum
 ```
-- Séquences de caractères prédéfinies, mots-clés du langage dont la signification est inaltérable
+
+- Séquences de caractères prédéfinies, **mots-clés** du langage dont la signification est inaltérable
 ```{r}
 TRUE
 ```
 
 
 
-## Fonctions et opérateurs
+## Fonctions et opérateurs (1)
 
 - Il y a deux façons d’obtenir un résultat :
   - Par des appels de **fonction** : un nom de fonction (un « symbole ») et, entre parenthèses, séparés par des virgules, les paramètres de la fonction passés soit par **position** soit par **nom**
@@ -198,6 +137,9 @@ library(rio)
 fichier <- "/home/alex/Devel/Cours-R-Programmation/data/dpt2022.csv"
 import(fichier, as.is=TRUE)
 ```
+
+## Fonctions et opérateurs (2)
+
   - Par des appels à des **opérateurs** : une expression, l’opérateur et une autre expression
 ```{r}
 1+1
@@ -210,7 +152,6 @@ a <- 1
 library(tidyr)
 fichier %>% import(as.is=TRUE)
 ```
-
 
 - Tout appel produit un résultat (pas nécessairement visible, comme par exemple avec l'opérateur `<-`)
 
@@ -302,9 +243,7 @@ invisible(6*print(7))
 ```
 
 
-# Symboles et objets
-
-## Contenus, noms
+## Symboles et objets (1)
 
 - De façon quasi systématique, l'appel à une fonction R crée quelque chose quelque part en
 mémoire. 
@@ -317,7 +256,7 @@ quelque chose, mais cela ne serait guère pratique de manipuler des adresses mé
 prenoms2022 <- import("../data/dpt2022.csv", as.is=TRUE)
 ```
 
-## Symboles
+## Symboles et objets (2)
 
 - Contrairement à la logique de beaucoup de langages de programmation, des noms comme `prenoms2022`, `import` ne correspondent pas à des cases contenant des choses (une table, une fonction) qu'il aurait fallu pré-déclarer. 
 - Ce sont plutôt des étiquettes (des symboles), qu'on appose a posteriori à coté des objets pour pouvoir en parler
@@ -340,19 +279,24 @@ ls()
 
 3. Association du nom aux données
 
-## Symboles ou chaînes de caractères
+## Symboles ou chaînes de caractères (1)
 
 - Les symboles ne sont pas que des étiquettes apposées sur des objets, ils peuvent aussi être
 utilisés comme arguments sans faire référence à l’objet qu’ils pourraient désigner (il
 pourraient n’en désigner aucun!). Et des ponts existent vers le type "character".
 - Ici on convertit le symbole `x` PAS sa valeur
+
 ```{r}
 as.character(quote(x))
 ```
+
 - Ici on fabrique un symbole à partir d'une chaîne de caractère
 ```{r}
 as.name("x")
 ```
+
+
+## Symboles ou chaînes de caractères (2)
 
 - On peut aussi explicitement naviguer dans le lien entre un symbole, exprimé comme chaîne
 de caractères, et l’objet associé.
@@ -371,103 +315,144 @@ get(x)
 assign("x",pi)
 ```
 
-## Les objets ne sont pas modifiables 
+## Les objets ne sont pas modifiables (1)
 
-# Les principes du langage R
+- En règle quasi-générale (exceptions : data.table, R6), il est impossible de modifier un objet de R.
+- Fonctionnellement, si on veut faire une modification à un objet, par exemple une table de données, associée à un symbole <symbole> donné :
+  - on construit une copie modifiée de la table
+  - on associe la copie modifiée au symbole <symbole>
+  - la précédente table associée au symbole <symbole> est alors perdue parce que plus référençable (sauf si on l’avait associée à un deuxième symbole).
+- En pratique, c’est R qui se charge de minimiser le nombre de réelles copies et de supprimer de la mémoire les objets “perdus” (non référençables).
 
-## Introduction
 
-- Le statique: les données
-  1. Pas de variables, mais des **objets** et des **symboles**
-  2, Un objet n’est **plus modifiable** après sa création
-  3. Les données des types de base n’existent qu’au sein de
-**vecteurs**
-- Le dynamique: les fonctions
-  4. Une fonction derrière toute opération
-  5. Une fonction est une forme particulière d'objet
-  6. Toute fonction peut être surchargée
-  7. Chaque fonction est libre d'interpréter ses arguments comme elle le veut
-  
-## Quelques principes de programmation
+## Les objets ne sont pas modifiables (2)
 
-- Commencez petit: 
-  -Pour résoudre un problème ‘truc’, ne pas commencer par écrire ‘truc <- function...’. 
-  - Mais commencer par décomposer le problème en sous questions élémentaires et ensuite commencer par coder et tester ses sous-questions. 
-  - L’assemblage n’est que la dernière étape.
+- Par exemple, avec le package dplyr, pour convertir la colonne 
+`sexe` de la table ‘nanopop’ en numérique dans une nouvelle variable sexe2, on écrira :
+```{r, eval=FALSE}
+nanopop %>% mutate(sexe2=as.numeric(sexe))
+```
 
-- Écrivez des petites fonctions.
-  - Une fonction pour chaque opération élémentaire : ne pas tenter de faire plusieurs choses disjointes dans une même fonction.
-  - Le code d’une fonction doit tenir sur un seul écran pour permettre d’en suivre la logique de déroulement sans toucher au clavier et à la souris.
-  - Les fonctions potentiellement neutres (accolades, return) ne sont pas de bons amis quand elle sont sur-utilisées.
-- Faites la chasse aux clones.
-  - Ne JAMAIS dupliquer de code : cela alourdit le programme et introduit un point de faiblesse en cas de modification ultérieure.  
-- Factoriser au maximum. 
-  - R permet une grande souplesse dans les arguments des fonctions :des codes presque identiques peuvent toujours être réduits à l’usage d’une unique fonction.
-- Respectez la symétrie.
-Si le problème à traiter présente une forme de symétrie, celle-ci doit se retrouver dans le code, sinon c’est un indice de cas mal couverts.
--Ne vous préoccupez pas d’optimisation, sauf dans les cas critiques
--Testez
-Commencer par les cas extrêmes. Les autres ont plus de chances de fonctionner.
--
-Adoptez un style et tenez vous y.
-Il y a plusieurs façons d’écrire du R, de nommer ses objets ou de présenter les programmes.
-Ne mélangez les patois R qu’en cas de nécessité.
-Un nom d’objet parlant évite bien des commentaires.
--Décrivez ce que font vos fonctions.
--Commentez les passages difficiles.
-Mais uniquement les passages difficiles : un commentaire de type paraphrase alourdit les programmes et floute la vision.
--
-Soignez l’esthétique !
-Votre programme est votre bébé : gardez le propre, bien proportionné et beau. Plus il sera beau plus il sera attachant et incitera
-à lire votre code ou à lui faire confiance.
+- En sortie il y a en mémoire :
+  - le résultat, une table avec la colonne supplémentaire , qui est juste affiché,
+  - mais aussi la table originale, qui est toujours associée au symbole nanopop.
+- Pour "modifier" l'objet, il faut écrire explicitement
 
-## Importer des données en R
+```{r, eval=FALSE}
+nanopop %>% mutate(sexe2=as.numeric(sexe)) -> nanopop
+```
 
--
-Données tabulaires (lignes x colonnes avec au croisement une donnée
-« élémentaire »)
-– import du package rio : l’outil tous terrains en fonction du suffixe
-– Paramétrage spécifique pour cas particulier : suivre la piste rio, la documentation
-indique le package utilisé (donc préconisé) et ses options
-– read.fwf pour les formats à largeur de champ fixe
--
-Données structurées non tabulaires : un peu de programmation autour de
-packages standard (cf. rio)
-– Classeurs XLSX de plus d’une feuille
-– Fichiers XML : packages XML, xml2
--
-Fichiers texte non structurés : programmer à l’aide des fonctions de
-manipulation de chaînes de caractères (package stringr)
-– Fonctions utiles : readLines , read_file du package readr
--
-Fichiers binaires (autres que images, sons, films) : programmer autour du
-type de données "raw"
-– Fonctions utiles :
-open, close, readBin
 
-# Les vecteurs
+
+# Les bases du langage
+
+## Les type élémentaires (atomiques)
+
+- En R, la structure de données de base est le vecteur : ensemble de données qui sont toutes du même “type” de base (aussi dit “atomique”)
+- Les types de base en R (`atomic`):
+  - logical
+  - integer
+  - numeric (double)
+  - complex
+  - character
+  - raw
+- Les données dans ces types de base ne peuvent exister en dehors d’une structure de vecteur (principe 3).
+
+
+## Les types `integer` et `numeric`
+
+- Numérique, virgule flottante (`double` ou `numeric`), base des calculs statistiques
+```{r}
+1
+```
+```{r}
+a <- 1 
+class(a)
+```
+
+- Numérique, entier (« integer ») : un nombre entier de ce type est suivi d’un L.
+```{r}
+b <- 1L
+class(b)
+```
+
+## Le type `logical` (booleen)
+
+- Logique/booléen (« logical », résultat des tests)
+```{r}
+a == b
+```
+```{r}
+c <- FALSE
+class(c)
+```
+
+## Le type `character` 
+
+- Caractère (« character », chaînes de contenu quelconque, entre simples ou doubles quotes
+
+```{r}
+d <- 'Je suis une chaîne de caractères'
+class(d)
+```
+
+
+## Les types de données élémentaires: `raw`
+
+- Brut (« raw », pour des manipulations au niveau de l’octet)
+```{r}
+as.raw(2)
+```
+
+- La fonction `charToRaw()` convertit un caractère de longueur 1 en `raw`
+
+```{r}
+charToRaw("a")
+```
+
+## Les vecteurs
+
+- Un donnée d’un des types atomiques ne peut exister qu’au sein d’un **vecteur**
+```{r}
+a <- 1
+is.vector(a)
+```
+
+- L'objet `a` est un vecteur de longueur 1
+
+```{r}
+length(a)
+```
+
+- L'objet `b` est également de type `numeric`
+
+```{r}
+b <- c(1,2)
+class(b)
+```
+
+- Sa longueur est de 2
+```{r}
+length(b)
+```
 
 ## Créer un vecteur (1)
 
-- En R, la structure de données de base est le vecteur : ensemble de données qui sont toutes du même “type” de base (aussi dit “atomique”):
-  - booléen : “logical”,
-  - numérique entier : “integer”,
-  - numérique, virgule flottante : “double”, date : "date"
-  - numérique complexe : “complex”,
-  - chaîne de caractères : “character”, facteur : "factor"
-  - octet : “raw”.
-- Les données dans ces types de base ne peuvent exister en dehors d’une structure de vecteur (principe 3).
+
 - La plus simple façon de créer un vecteur (de longueur 1) est juste d’écrire une constante dans un type de
 base :
 ```{r}
 42
 ```
-Un vecteur peut être vide, par exemple à la suite d’une sélection infructueuse. La notation est le type du vecteur
+
+- Un vecteur peut être vide, par exemple à la suite d’une sélection infructueuse. La notation est le type du vecteur
 suivi de (0) :
 ```{r}
 v <- logical(0)
 v
+length(v)
 ```
+
 
 ## Créer un vecteur (2)
 
@@ -482,12 +467,13 @@ vector("complex",5)
 c(6,7)
 ```
 
-  – de nombreuses autres fonctions : la répétition, 
+  - de nombreuses autres fonctions : la répétition 
 ```{r}
 rep(TRUE,5)
 
 ```
-la fabrication de suite d’entiers consécutifs, etc...
+
+- la fabrication de suite d’entiers consécutifs, etc...
 ```{r}
 1:10
 ```
@@ -510,7 +496,8 @@ fonction, cf. principe numéro 4) au sein duquel on peut préciser :
 (v <- 101:110)
 
 ```
-par exemple les éléments 3 à 5
+
+ - par exemple les éléments 3 à 5
 ```{r}
 v[3:5]
 ```
@@ -532,8 +519,13 @@ v[-3:-5]
 ```{r}
 v[c(TRUE,rep(FALSE,8),TRUE)]
 ```
+
 - Le crochet ne fait pas de l’indexation, c’est un véritable opérateur entre deux vecteurs.
 - L’intérêt majeur de la sélection par vecteur de booléens est que ce vecteur peut provenir d’un calcul logique, où on exprime une condition sur les éléments. Cette condition peut utiliser n’importe quel élément connu de R, et en particulier le vecteur lui-même.
+
+
+## Accéder aux éléments d'un vecteur (3)
+
 - Exemple : une sélection des éléments dont la parité (pair/impair) dépend du positionnement
 d’un paramètre de nom PARITE (%% est le reste de la division entière)
 
@@ -542,6 +534,628 @@ PARITE <- 1
 v[(v %% 2)==PARITE]
 ```
 
+- L'opérateur `%%` est appliqué à tous les éléments de `x`
+```{r}
+v %% 2
+```
 
+- Le test renvoie un vecteur de booléens
+```{r}
+(v %% 2)==PARITE
+```
+
+
+
+## Utilisation de `all()` et `any()`
+
+- Création d'un vecteur de nombres pairs
+```{r}
+x <- seq(2,12,2)
+x 
+```
+
+- Pour vérifier que tous les nombres sont pairs, on peut utiliser `all()`
+```{r}
+all(x %% 2 == 0)
+```
+
+
+
+## Utilisation de `all()` et `any()`
+
+- Pour tester si un des éléments de `x` est impair
+```{r}
+any(x %% 2 != 0)
+```
+
+- On peut sommer les valeurs booléennes pour obtenir les nombre d'éléments concernés
+```{r}
+sum( x > 6)
+```
+
+## Le crochet n'est qu'un opérateur
+
+- Puisque le crochet n’est qu’un opérateur, rien n’interdit d’utiliser autre chose qu’un
+symbole du coté gauche de l’opérateur, en particulier un résultat d’un appel de fonction
+```{r}
+seq(1,50,5)[1:5]
+```
+
+
+## Exercice - Extraire une partie d’un vecteur
+
+- En utilisant le vecteur des 7 jours à partir d’aujourd’hui compris (fonction `as.Date()` ou `Sys.Date()`), quels sont les dates dont le jour de la semaine se termine par « di » ?
+```{r, echo=FALSE}
+v <- Sys.Date()+ 0:6
+weekdays(v)
+```
+
+- On pourra utiliser la fonction `endsWith` ou la fonction `str_detect` du package `stringr`
+avec une expression régulière
+
+## La fonction `which`
+
+- La fonction which permet de faire un pont entre une sélection par booléens ou une sélection par
+indice : elle restitue les positions des éléments vérifiant une condition.
+```{r}
+LETTERS
+```
+- Position des lettres N à P
+```{r}
+which(LETTERS>="N" & LETTERS<="P")
+```
+- Version plus simple sans ‘which’
+```{r}
+length(LETTERS[which(LETTERS>="Z")])
+```
+- **Attention** : which est souvent utilisée dans des contextes où on n’en a pas besoin grâce à la possibilité de
+sélection par booléens
+
+
+## Le recyclage des éléments dans les opérations vectorielles (1)
+
+- En R, les opérateurs arithmétiques et logiques ainsi qu’un grand nombre de fonctions dont `[` sont **vectorisés** 
+- Lorsqu’on doit faire quelque chose sur tous les éléments d’un vecteur, il n’y a pas à penser à répéter la chose sur chaque élément. C’est R qui va se charger de la “boucle”
+- Et, avec les architectures modernes (multi-cores, GPUs), il est même possible que les opérations se
+fassent de façon simultanée !
+
+
+## Le recyclage des éléments dans les opérations vectorielles (2)
+
+- Avec des vecteurs de même longueur
+```{r}
+1:10 + rep(100,10)
+```
+
+- Avec deux vecteurs de longueurs différentes, par exemple un calcul impliquant un scalaire et un vecteur
+```{r}
+1:10 + 100
+```
+
+- R “recycle” le vecteur le plus court pour en faire (virtuellement) un vecteur de la même longueur que le plus long
+```{r}
+1:10 + rep(100,11)
+```
+
+```{r}
+1:10 + c(100,200)
+```
+
+
+## Recyclage 
+
+- Le code suivant fonctionne :
+```{r}
+library(dplyr)
+mtcars %>% filter(cyl=="6")
+```
+```{r}
+mtcars %>% filter(cyl==c("6","4"))
+```
+- La bonne solution
+
+```{r}
+mtcars %>% filter(cyl %in% c("6","4"))
+```
+
+## La fonction `paste()`
+
+- La concaténation de chaînes de caractères se fait avec la fonction `paste0` 
+- Appliquée à deux vecteurs, elle produit un vecteur de chaînes de caractères :
+
+```{r}
+v <- c("un","deux","trois","quatre","cinq")
+w <- 1:4
+paste0(v,w)
+```
+- La fonction originale `paste` introduit un espace:
+```{r}
+paste(v,w)
+```
+- L’argument `collapse` permet de changer le mode de fonctionnement : la concaténation produit un vecteur d’un seul élément.
+
+```{r}
+paste(v, collapse=";")
+```
+
+## Modifier une partie d’un vecteur (1/3)
+
+- Pour modifier une partie d’un vecteur on fera par exemple :
+```{r}
+v <- 101:110
+v[3:5] <- 0
+v
+```
+
+- Un vecteur est extensible à souhait, R complète les trous :
+```{r}
+v[12] <- 12
+v
+```
+
+## Modifier une partie d’un vecteur (2/3)
+
+- En R, on ne peut pas modifier un objet !
+- Or dans l’écriture `v[3:5] <- 0`:
+  - une partie du vecteur semble “recevoir” la valeur 0 comme s’il s’agissait de cases mémoire dans un langage classique, 
+  - l’assignation `<-` ne semble pas du tout être ici l’association d’un nom à une valeur : v[3:5] n’est pas un
+symbole.
+
+
+## Modifier une partie d’un vecteur (3/3)
+
+- En fait cette écriture est un leurre, et sous une apparence d’instruction d’affectation de langage de programmation classique, elle cache deux choses :
+  - le recours à une nouvelle fonction, de nom un peu particulier [<-, qui se charge de construire un
+(nouveau) vecteur modifié, et joue en quelque sorte le rôle d’une fonction d’écriture de données, alors
+que la fonction [ réalise la fonction de lecture,
+  - un raccourci pour une situation classique. Quand on veut, en R, modifier un objet associé à un symbole :
+    1. on crée une copie modifiée de l’objet indiqué par le symbole,
+    2. on réassigne le symbole à ce nouvel objet.
+
+
+## Supprimer des éléments d'un vecteur
+
+- En revanche on ne peut pas éliminer un élément d’un vecteur. 
+- Mais il est possible de sélectionner tous les éléments sauf celui qu’on voudrait éliminer,
+ce qui revient au même si on appelle le résultat du même nom que l’original.
+
+```{r}
+v <- v[-2]
+v
+```
+
+## Les matrices (1)
+
+- Pour les besoins des calculs scientifiques, les matrices existent en R sous forme d’une spécialisation de
+la représentation en vecteur
+- Pour créer une matrice on peut commencer par créer un vecteur puis on spécifie les dimensions de la matrice en utilisant la forme “réversible” de la fonction `dim` : `dim<-`
+```{r}
+m <- c(0,5,4,9,3,0,0,1,2,7)
+dim(m) <- c(2,5)
+m
+```
+- Une matrice peut avoir plus de deux dimensions
+
+
+## Accès aux éléments d'une matrice
+
+- Les crochets permettent d’accéder à des éléments ou des portions d’une matrice qui seront soit des vecteurs soit des matrices :
+  - un seul élément
+```{r}
+m[2,5]
+```
+  - une ligne
+```{r}
+m[2,]
+```
+  - une colonne
+```{r}
+m[,2]
+```
+
+## Sélection des éléments d'une matrice avec des booléens
+
+- Les opérateurs de comparaison `>`, `>=`, '==', `!=` s'appliquent à chaque élément de la matrice
+```{r}
+m>4
+```
+
+- On peut les utiliser pour sélectionner des parties de la matrice
+```{r}
+m[m>4]
+```
+- Le résultat est un vecteur
+
+## Opérations sur les matrices
+
+- Opération entre une matrice et une valeur unique
+```{r}
+m * 2
+```
+
+- Opération entre deux matrices
+```{r}
+m - m
+```
+
+## Les fonctions `rowSums` et `colSums`
+
+- Somme des lignes
+```{r}
+rowSums(m)
+```
+
+- Somme des colonnes
+```{r}
+colSums(m)
+```
+
+- Sélection
+```{r}
+m[, colSums(m)>5]
+```
 
 ## Les listes
+
+- Une liste est une collection d’objets qui peuvent être de types **différents** 
+- On crée une liste avec la fonction `list()`. Une liste peut être vide : `list()`.
+- Les éléments d’une liste peuvent être nommés. Cela simplifiera l’accès ultérieur en précisant des
+noms et non des positions
+- La liste ci-dessous contient des champs des types élémentaires du langage R: double, entier, booléen, chaîne de caractères, fonction e  liste. Trois des champs sont nommés : a, f, l. Les autres ne seront accessibles que par leur position.
+```{r}
+liste <- list(a=1, 3L, "a", TRUE, f=sum, l=list(1, 2))
+```
+
+## Utilisation des listes en R
+
+- La liste est la structure de données la plus importante de R car elle permet de mémoriser n’importe
+quelle information complexe. 
+- Elle est à la source de la définition de nombreux types de données : **data
+frames**, **objets graphiques**, **résultats de régression**, ... 
+- Ces types de données sont souvent accompagnés d’une redéfinition de la fonction d’impression/affichage à l’écran qui cache la structure interne en produisant une “belle” sortie. 
+- Pour connaître la structure interne, il faut alors utiliser la fonction `str()` qui affiche un descriptif détaillé.
+```{r}
+str(liste)
+```
+
+## Accès aux éléments d'une liste
+
+- Deux opérateurs (cf. principe numéro 4) sont disponibles pour accéder à un seul élément d’une liste :
+  - le double crochet `[[...]]`, avec :
+    - soit un numéro d’élément (surtout en l’absence de noms)
+```{r}
+liste[[5]]
+```
+    
+    - soit un nom d’élément (quand la liste contient des éléments nommés),
+```{r}
+liste[["f"]]
+```
+    
+  - le `$` qui n’évalue pas son argument de droite (qui doit être un nom) et ne permet donc pas de paramétrer l’élément à récupérer
+```{r}
+liste$f
+```
+
+## Accéder à une partie d’une liste
+
+- L’opérateur simple crochet permet d’extraire une partie d’une liste systématiquement sous forme de liste, même lorsqu’il n’y a qu’un seul élément.
+- Le fonctionnement est similaire à l’opérateur sur les vecteurs. On a le choix entre lui fournir :
+  - un vecteur de nombres, éventuellement tous négatifs,
+```{r}
+liste[5]
+```
+
+  - un vecteur de booléens,
+  - un vecteur de noms d’éléments.
+
+```{r}
+liste[-1:-4]
+```
+
+## « Modifier » une liste
+
+- Les opérateurs `[[` et `$` sont “réversibles”. On peut ainsi positionner un élément dans une liste par sa
+position ou son nom avec `[[<-`, ou par son nom `$<-`
+- Dans l'exemple ci-dessous, on ajoute un 4 ème élément, le troisième est indéfini
+```{r}
+liste <- list(1,2)
+liste[[2]]<- -1
+liste[[4]]<- -2
+liste
+```
+
+- Pour ajouter un élément à unbe liste, celle-ci doit préalablement exister
+```{r}
+liste2 <- list()
+liste2$a <- 1
+```
+
+
+## Convertir une liste en vecteur : `unlist` (1)
+
+- Lorsque tous les éléments d’une liste sont de même type, la fonction `unlist` permet de construire un vecteur en "écrasant" tous les éléments de la liste.
+```{r}
+list(1, 2, 3) %>% unlist()
+```
+
+- Ici les éléments sont convertis en chaîne de caractère
+```{r}
+list(1, "a") %>% unlist()
+```
+
+- Listes imbriquées
+
+```{r}
+list(1, list(2,3)) %>% unlist()
+```
+
+
+## Convertir une liste en vecteur : `unlist` (2)
+
+- Lorsque les éléments de la liste sont nommés, les éléments du vecteur résultat sont - par défaut (voir paramètre ad’hoc) - également nommés (comme pour les éléments d’une liste, les élements d’un vecteur peuvent être nommés)
+```{r}
+list(a=1, b=2, c=3) %>% unlist()
+```
+
+## Stockage des listes en mémoire (1)
+
+- En mémoire la structure de liste n’est guère différente de celle d’un vecteur
+afin de permettre le même type d’accès aléatoire.
+```{r}
+liste <- list(a=1,b=2)
+is.vector(liste)
+```
+
+- Utilisation de `inspect` pour afficher les attributs internes
+```{r, message=FALSE}
+library(pryr)
+
+inspect(liste)
+```
+
+## Stockage des listes en mémoire (2)
+
+- Mais d’autres éléments de R nécessitent une structure de liste : un programme est une liste d’appels de fonctions.
+- Pour ses besoins internes, R utilise une structure de liste (« pair list ») formée de
+cellules chaînées entre-elle, directement héritée de LISP. Chaque cellule a un
+« tag » spécifiant son contenu, un « car » donnant le contenu et « cdr » indiquant la suite de la liste.
+- La navigation dans ce type de structure n’est pas possible sans recours aux fonctions internes, mais des conversions sont possibles avec la fonction as.list.
+
+
+# Importer des données en R
+
+## Types de données (1)
+
+- Données tabulaires (lignes x colonnes avec au croisement une donnée « élémentaire »)
+- `import` du package `rio` : l’outil tous terrains en fonction du suffixe
+- Paramétrage spécifique pour cas particulier : suivre la piste rio, la documentation indique le package utilisé (donc préconisé) et ses options
+- `read.fwf` pour les formats à largeur de champ fixe
+- `read.csv` pour les fichiers `.csv` avec un séparateur `,`ou `;`
+
+## Types de données (2)
+
+- Données structurées non tabulaires : un peu de programmation autour de packages standard (cf. rio)
+- Classeurs XLSX de plus d’une feuille
+- Fichiers XML : packages XML, xml2
+- Fichiers texte non structurés : programmer à l’aide des fonctions de manipulation de chaînes de caractères (package stringr)
+- Fonctions utiles : readLines , read_file du package readr
+
+## Types de données (3)
+
+- Fichiers binaires (autres que images, sons, films) : programmer autour du type de données "raw"
+- Fonctions utiles : open, close, readBin
+
+
+
+## Exemple: Prix des carburtants
+
+- Un fichier réel de mise à disposition d’informations sur les points de vente
+de carburant :
+  - localisation
+  - période d’ouverture
+  - services annexes
+  - historique des prix
+
+```{r, echo=FALSE, eval=FALSE}
+library(xml2)
+library(XML)
+
+carburant <- read_xml("../data/PrixCarburants_quotidien_20231211.xml")
+
+carburant_xml <- xmlParse(carburant)
+# carburant_xml
+
+pdv <- xml_find_all(carburant, ".//pdv")
+pdv[1]
+
+df_carburant <- xmlToDataFrame(nodes = getNodeSet(carburant_xml, ".//pdv"))
+df_carburant
+```
+
+
+## Exercice: Lecture du fichier
+
+- On lit l'intégralité du fichier avec la fonction `readLines()`
+
+```{r, echo=FALSE}
+con <- file("../data/PrixCarburants_quotidien_20231211.xml", encoding = "latin1")
+carburants <- readLines(con)
+close(con)
+unique(Encoding(carburants))
+```
+
+- Le résultat est un (très long) vecteur
+```{r}
+head(carburants)
+```
+
+## Exercice: Sélection des lignes
+
+- Avec la fonction `str_detect` de stringr, ne conserver que les lignes contenant ‘pdv ’ (avec un espace à la fin, donc ne contenant pas ‘pdv_liste’). 
+- str_detect est une fonction qui accepte une expression régulière mais nous n’en avons pas besoin ici.
+```{r}
+library(stringr)
+carburants <- carburants[str_detect(carburants, "pdv ")]
+head(carburants)
+```
+- Avec la fonction `str_replace_all`, éliminer : `<pdv ` espaces avant, un après), les `>` , les double quotes
+```{r}
+carburants <- str_replace_all(carburants,"  <pdv " , "")
+carburants <- str_replace_all(carburants, "\\\\", "")
+head(carburants)
+```
+
+## Exercice :  Utilisation des expressions régulières (1)
+
+- Les expressions régulières sont un outil de test de chaînes de caractères permettant de reconnaître la
+présence d’un ensemble de chaînes possibles grâce à une syntaxe spécifique :
+un des caractères `^ $ . * + ? | ( ) [ ] { } \`
+- La fonction `str_detect` du package `stringr` est une des fonctions réalisant ce genre de tests : elle cherche
+si son premier argument contient quelque chose ressemblant à son second argument et répond vrai ou faux.
+- Le premier argument peut être un vecteur, le résultat sera un vecteur de booléens.
+
+
+## Exercice :  Utilisation des expressions régulières (2)
+
+- Les éléments de syntaxe les plus fréquemment utilisés :
+
+```{r, eval=FALSE}
+str_detect(arg,"^0") # commence par ‘0’
+str_detect(arg,"0$") # se termine par ‘0’
+str_detect(arg,"^\\$") # commence par ‘$’ non interprété
+
+str_detect(arg,"^.0") # commence par n’importe quel caractère puis un 0
+str_detect(arg,"^[1-6]") # commence par un caractère de ‘1’ à ‘6’
+str_detect(arg,"^[1-68]") # commence par un caractère de ‘1’ à ‘6’ ou un ‘8’
+str_detect(arg,"^[^1-6]") # commence par tout sauf un caractère de ‘1’ à ‘6’
+str_detect(arg,"^\\d") # commence par un chiffre décimal
+
+str_detect(arg,"^.*9") # commence par 0 et + caractères quelconques puis un 9
+str_detect(arg,"^.+9") # commence par 1 et + caractères quelconques puis un 9
+str_detect(arg,"^01?") # commence par 0 et éventuellement un 1
+str_detect(arg,"^0(19)?") # commence par 0 et éventuellement le groupe ‘19’
+str_detect(arg,"^(19|20)")# commence par ‘19’ ou ‘20’
+```
+
+## Exercice
+
+- Avec la fonction `str_split`, éclater la colonne issue du data.frame précédent pour séparer en une liste de couples nom=valeur. 
+- Afficher la structure de la première ligne de la table résultat.
+- La table obtenue précédemment n’est pas « propre » (des données non élémentaires dans la dernière colonne). 
+- Avec la fonction `unnest` de `tidyr`, répartir la nouvelle colonne de type liste sur plusieurs lignes.
+- Avec la fonction `separate`, séparer les deux composants des couples nom=valeur dans deux nouvelles colonnes.
+- Le résultat peut être considéré comme une table en format long : un colonne indique le nom de la donnée, une autre la valeur. Mettre le résultat en format « large » (fonction spread ou équivalent): une colonne par modalité du nom.
+- Avec la fonction `gf_point` de `ggformula`, faire une carte des latitudes - longitudes, en les ayant préalablement converties en numérique.
+
+
+```{r}
+lire <- function(tag)
+  z[str_detect(z,paste0('<',tag,' '))] %>%
+str_replace_all(paste0(" +<",tag,' '),"") %>%
+str_replace_all(paste0(' */?>'),"") %>%
+str_replace_all("\"","") %>%
+  
+  
+  
+data.frame(
+d=.,
+lire <- \(tag)
+no=seq_along(.),
+z[str_detect(z,paste0('<',tag,' '))] |>
+stringsAsFactors=FALSE) %>%
+str_replace_all(paste0(" +<",tag,' '),"") |>
+mutate(l=str_split(d," +")) %>%
+str_replace_all(paste0(' */?>'),"") |>
+unnest(l) %>%
+str_replace_all("\"","") |>
+separate(l,c("clé","donnée"),"=") %>%
+(\(x) data.frame(
+d=x,
+spread(clé,donnée)
+```
+
+
+# Programmation avec R
+
+## Introduction
+
+- Le statique: les données
+  1. Pas de variables, mais des **objets** et des **symboles**
+  2, Un objet n’est **plus modifiable** après sa création
+  3. Les données des types de base n’existent qu’au sein de
+**vecteurs**
+- Le dynamique: les fonctions
+  4. Une fonction derrière toute opération
+  5. Une fonction est une forme particulière d'objet
+  6. Toute fonction peut être surchargée
+  7. Chaque fonction est libre d'interpréter ses arguments comme elle le veut
+  
+## Quelques principes de programmation (1)
+
+- Commencez petit: 
+  -Pour résoudre un problème ‘truc’, ne pas commencer par écrire ‘truc <- function...’. 
+  - Mais commencer par décomposer le problème en sous questions élémentaires et ensuite commencer par coder et tester ses sous-questions. 
+  - L’assemblage n’est que la dernière étape.
+
+
+## Quelques principes de programmation (2)
+
+- Écrivez des petites fonctions.
+  - Une fonction pour chaque opération élémentaire : ne pas tenter de faire plusieurs choses disjointes dans une même fonction.
+  - Le code d’une fonction doit tenir sur un seul écran pour permettre d’en suivre la logique de déroulement sans toucher au clavier et à la souris.
+  - Les fonctions potentiellement neutres (accolades, return) ne sont pas de bons amis quand elle sont sur-utilisées.
+
+## Quelques principes de programmation (3)
+
+- Faites la chasse aux clones.
+  - Ne JAMAIS dupliquer de code : cela alourdit le programme et introduit un point de faiblesse en cas de modification ultérieure.  
+- Factoriser au maximum. 
+  - R permet une grande souplesse dans les arguments des fonctions :des codes presque identiques peuvent toujours être réduits à l’usage d’une unique fonction.
+  
+
+## Quelques principes de programmation (4)  
+  
+- Respectez la symétrie.
+Si le problème à traiter présente une forme de symétrie, celle-ci doit se retrouver dans le code, sinon c’est un indice de cas mal couverts.
+-Ne vous préoccupez pas d’optimisation, sauf dans les cas critiques
+-Testez
+Commencer par les cas extrêmes. Les autres ont plus de chances de fonctionner.
+
+
+- Adoptez un style et tenez vous y.
+- Il y a plusieurs façons d’écrire du R, de nommer ses objets ou de présenter les programmes.
+- Ne mélangez les patois R qu’en cas de nécessité.
+- Un nom d’objet parlant évite bien des commentaires.
+- Décrivez ce que font vos fonctions.
+- Commentez les passages difficiles.
+- Mais uniquement les passages difficiles : un commentaire de type paraphrase alourdit les programmes et floute la vision.
+-
+Soignez l’esthétique !
+Votre programme est votre bébé : gardez le propre, bien proportionné et beau. Plus il sera beau plus il sera attachant et incitera
+à lire votre code ou à lui faire confiance.
+
+
+
+
+# Définir des fonctions
+
+## Création d'une fonction
+
+1. Lister les noms des paramètres de la fonction
+2. Ecrire une expression utilisant ces paramètres
+3. Donner un nom à la fonction
+4. Exécuter le code donnant la définition pour créer la
+fonction dans l’environnement courant
+
+```{r}
+Somme <- function(début,fin)
+  sum(c(-1,1)*(début:fin)^2)
+```
+
+5. Utilisation de la fonction
+```{r}
+Somme(1,100)
+```
+
+
