@@ -40,11 +40,6 @@ knitr::knit_hooks$set(chunk = function(x, options) {
 - Gérer les paramètres d'une fonction
 
 
-## Supports
-
-
-
-
 ## Prérequis
 
 - Savoir travailler en R : RStudio ou Rgui
@@ -164,7 +159,7 @@ fichier %>% import(as.is=TRUE)
 - Impression (affichage du résultat dans la console): `print()`
 
 
-## Les fonctions `parse()` et `eval()`
+## La fonction `parse()`
 
 - Le rôle de la fonction `parse()` est de faire les contrôles de syntaxe. Au passage, elle
 transforme une séquence de caractères en une structure interne, une « expression »
@@ -174,35 +169,47 @@ ordonnançant les futurs calculs
 e <- parse(text="6*7")
 e
 ```
+
 - L’expression contient l’arborescence des calculs à effectuer
 ```{r}
 as.list(e[[1]])
 ```
+
+
+## La fonction `eval()`
 
 - La fonction `eval()` appliquée à une **expression**, permet d’obtenir un résultat. Elle est le coeur de R.
 ```{r}
 eval(e)
 ```
 
+- La fonction `eval()` accepte également des arguments de classe `call` 
+
+```{r}
+eval({ xx <- pi; xx^2})
+xx
+```
+
+
 ## La fonction `quote()`
 
-- Comme une majorité de fonctions, la fonction `eval()` commence par prendre
-la valeur de son argument puis travaille sur cette valeur. Au final, comme la fonctionnalité est d’évaluer,
+- Comme une majorité de fonctions, la fonction `eval()` commence par prendre la valeur de son argument puis travaille sur cette valeur. Au final, comme la fonctionnalité est d’évaluer,
 l’argument est évalué deux fois.
 - La fonction `quote()` fait, elle, partie des fonctions qui ne commencent pas
 par prendre la valeur de leur argument. La fonction quote restitue son argument sans tenter de l’évaluer.
 
 ```{r}
 e <- quote(6*7)
-class(e)
-```
-```{r}
 e
 ```
+- `e` est de classe `call`
+```{r}
+class(e)
+```
+- Evaluation 
 ```{r}
 eval(e)
 ```
-
 - Il existe de nombreuses fonctions qui travaillent ainsi sur des objets de nature « expression » autorisant ainsi la construction de programmes constructeurs de programmes sans passer par une représentation sous forme de chaîne de caractères.
 
 ## La fonction `print()`
@@ -215,7 +222,7 @@ data.frame) ou être une structure encore plus complexe (un tableau, un graphiqu
 
 ## La fonction `print()`: Exemple
 
-```{r, out.width="70%", fig.align='center'}
+```{r, out.width="70%", fig.align='center', message=FALSE}
 library(ggformula)
 g <- mtcars %>% gf_bar( ~ cyl, fill="blue") + theme_minimal()
 g
@@ -478,12 +485,12 @@ rep(TRUE,5)
 1:10
 ```
 
-## Exercice
+## Exercice: Opérations sur les vecteurs
 
 - Avec la fonction `as.Date()` convertir la chaîne de caractères "2017-01-01" en donnée de
-type « date »
--Lui ajouter 1. On passe au 2 janvier 2017.
--Lui ajouter la suite des nombres de 1 à 7.
+type `date`
+-Lui ajouter 1. On passe au 2 janvier 2017
+-Lui ajouter la suite des nombres de 1 à 7
 - Appliquer la fonction `weekdays()` au résultat que l’on mémorisera sous le nom `jour`. Quel jour de
 la semaine était le 1er janvier 2017 ?
 
@@ -600,14 +607,21 @@ indice : elle restitue les positions des éléments vérifiant une condition.
 ```{r}
 LETTERS
 ```
+
 - Position des lettres N à P
 ```{r}
 which(LETTERS>="N" & LETTERS<="P")
 ```
+- Extraction des lettres avec `which`
+
+```{r}
+LETTERS[which(LETTERS>="N" & LETTERS<="P")]
+```
 - Version plus simple sans ‘which’
 ```{r}
-length(LETTERS[which(LETTERS>="Z")])
+LETTERS[LETTERS>="N" & LETTERS<="P"]
 ```
+
 - **Attention** : which est souvent utilisée dans des contextes où on n’en a pas besoin grâce à la possibilité de
 sélection par booléens
 
@@ -734,20 +748,23 @@ m <- c(0,5,4,9,3,0,0,1,2,7)
 dim(m) <- c(2,5)
 m
 ```
+
 - Une matrice peut avoir plus de deux dimensions
 
 
-## Accès aux éléments d'une matrice
+## Accéder aux éléments d'une matrice
 
 - Les crochets permettent d’accéder à des éléments ou des portions d’une matrice qui seront soit des vecteurs soit des matrices :
   - un seul élément
 ```{r}
 m[2,5]
 ```
+
   - une ligne
 ```{r}
 m[2,]
 ```
+
   - une colonne
 ```{r}
 m[,2]
@@ -850,7 +867,7 @@ liste[5]
   - un vecteur de noms d’éléments.
 
 ```{r}
-liste[-1:-4]
+liste[-1:-2]
 ```
 
 ## « Modifier » une liste
@@ -865,7 +882,7 @@ liste[[4]]<- -2
 liste
 ```
 
-- Pour ajouter un élément à unbe liste, celle-ci doit préalablement exister
+- Pour ajouter un élément à une liste, celle-ci doit préalablement exister
 ```{r}
 liste2 <- list()
 liste2$a <- 1
@@ -999,14 +1016,18 @@ library(stringr)
 carburants <- carburants[str_detect(carburants, "pdv ")]
 head(carburants)
 ```
+
+## Exercice: Nettoyage 
+
 - Avec la fonction `str_replace_all`, éliminer : `<pdv ` espaces avant, un après), les `>` , les double quotes
 ```{r}
 carburants <- str_replace_all(carburants,"  <pdv " , "")
-carburants <- str_replace_all(carburants, "\\\\", "")
+carburants <- carburants %>% str_replace_all(paste0(' */?>'),"") %>% str_replace_all("\"","")
+
 head(carburants)
 ```
 
-## Exercice :  Utilisation des expressions régulières (1)
+## Exercice:  Utilisation des expressions régulières (1)
 
 - Les expressions régulières sont un outil de test de chaînes de caractères permettant de reconnaître la
 présence d’un ensemble de chaînes possibles grâce à une syntaxe spécifique :
@@ -1016,7 +1037,7 @@ si son premier argument contient quelque chose ressemblant à son second argumen
 - Le premier argument peut être un vecteur, le résultat sera un vecteur de booléens.
 
 
-## Exercice :  Utilisation des expressions régulières (2)
+## Exercice:  Utilisation des expressions régulières (2)
 
 - Les éléments de syntaxe les plus fréquemment utilisés :
 
@@ -1049,31 +1070,208 @@ str_detect(arg,"^(19|20)")# commence par ‘19’ ou ‘20’
 - Avec la fonction `gf_point` de `ggformula`, faire une carte des latitudes - longitudes, en les ayant préalablement converties en numérique.
 
 
+# Tables de données en R: les data frames
+
+## Les objets `data.frame` (1)
+
+- Pour les besoins du statisticien, R introduit le data.frame, objet rectangulaire constitué d’une
+liste de vecteurs : Un vecteur pour chacune des variables
+- Chaque variable mesurant la même chose a donc un type unique (numeric, character, factor, ...)
+- Chaque vecteur a un nom et peut porter des attributs supplémentaires (des “labels” par exemple)
 ```{r}
-lire <- function(tag)
-  z[str_detect(z,paste0('<',tag,' '))] %>%
-str_replace_all(paste0(" +<",tag,' '),"") %>%
-str_replace_all(paste0(' */?>'),"") %>%
-str_replace_all("\"","") %>%
-  
-  
-  
-data.frame(
-d=.,
-lire <- \(tag)
-no=seq_along(.),
-z[str_detect(z,paste0('<',tag,' '))] |>
-stringsAsFactors=FALSE) %>%
-str_replace_all(paste0(" +<",tag,' '),"") |>
-mutate(l=str_split(d," +")) %>%
-str_replace_all(paste0(' */?>'),"") |>
-unnest(l) %>%
-str_replace_all("\"","") |>
-separate(l,c("clé","donnée"),"=") %>%
-(\(x) data.frame(
-d=x,
-spread(clé,donnée)
+data(iris)
+iris
 ```
+
+## Les objets `data.frame` (2)
+
+- Autant d’éléments dans chaque vecteur que d’observations. Tous les vecteurs ont donc la même hauteur.
+- Les "colonnes" sont des vecteurs. Mais ce principe peut être violé avec des données de complexité quelconque
+```{r}
+is.vector(iris$Sepal.Length)
+```
+
+## Les objets `data.frame`: Noms de lignes et de colonnes
+
+- Les colonnes ont des noms, les lignes aussi
+```{r}
+data(mtcars)
+head(mtcars)
+```
+- La fonction `colnames` renvoie un vecteur contenant les noms des colonnes
+
+```{r}
+colnames(mtcars)
+```
+- La fonction `rownames` renvoie un vecteur contenant les noms des lignes
+
+```{r}
+rownames(mtcars)
+```
+## Accéder à une partie d’un data frame : sélectionner des lignes (1)
+
+- La sélection d’une partie d’un data frame peut se faire comme s’il s’agissait d’une
+matrice : on fournit entre crochets deux arguments. Le premier sert à sélectionner les lignes
+selon les possibilités suivantes :
+  - Rien : toutes les lignes
+  - Un vecteur numérique : uniquement les lignes de numéro cité (déconseillé)
+  - Un vecteur de nombres négatifs : toutes les lignes sauf celles de numéro cité (déconseillé)
+  - Un vecteur de chaînes de caractères : uniquement les lignes de nom cité
+  
+## Accéder à une partie d’un data frame : sélectionner des lignes (2)
+  
+  - Un vecteur de booléens, exprimant généralement une condition sur les colonnes. Les colonnes
+doivent alors être citées par leur nom complet en indiquant la table d’origine, même si cela semble
+redondant : n’importe quel objet connu de R pourrait intervenir dans la condition
+
+```{r}
+mtcars[mtcars$hp>100 & mtcars$cyl==4,]
+```
+
+## Accéder à une partie d’un data frame : sélectionner des colonnes
+
+- Les colonnes sont sélectionnées par le deuxième argument présent entre crochets, sur le même
+principe que pour les lignes :
+  - Rien : toutes les colonnes
+  - Un vecteur numérique : uniquement les colonnes de numéro cité (déconseillé)
+  - Un vecteur de nombres négatifs : toutes les colonnes sauf celles de numéro cité (déconseillé)
+  - Un vecteur de chaînes de caractères : uniquement les colonnes de nom cité
+```{r}
+mtcars[1,c("hp","cyl")]
+```
+  - Un vecteur de booléens, exprimant généralement une condition sur les noms (la fonction `colnames` fournit le
+vecteur des noms de colonnes)
+```{r}
+mtcars[1,startsWith(colnames(mtcars),"c")]
+```
+
+## Accéder à une partie d’un data frame : Sélectionner une colonne unique
+
+- Un data frame étant une liste, l’opérateur `$` 
+```{r}
+mtcars$hp
+```
+ou l’opérateur `[[` permettent de restituer un champ de la liste, donc un vecteur
+```{r}
+mtcars[["hp"]][1:10]
+```
+
+## Exercice: Filtrer un data frame
+
+- A partir du fichier de prénoms ("../data/dpt2022.csv")
+- Sans utiliser dplyr (donc avec les crochets):
+  - Eliminer l'occurence "_PRENOMS_RARES"
+  - Récupérer le vecteur des prénoms, pour les naissances :
+    - de filles (sexe est à 2)
+    - des départements 16 et 18 (dpt)
+    - de l'année 2022
+
+- Ne produire que les valeurs distinctes (utiliser deux méthodes différentes : avec dplyr ou sans, grâce à un peu de recherche).
+
+## La fonction `with`
+
+- La fonction with permet de raccourcir l’écriture des conditions en omettant le nom de la table d’origine. Les noms cités sont cherchés en priorité parmi les colonnes de la table fournie en premier argument de with et
+ne sont pas perturbés par une éventuelle variable portant le même nom.
+```{r}
+cyl <- "n'importe quoi"
+with(mtcars,mtcars[(cyl==6)&(hp>150),])
+```
+- Avec un pipe qui limite les redondances et rapproche de la simplicité de `dplyr` :
+```{r}
+mtcars %>% with(.[(cyl==6)&(hp>150),])
+```
+
+## Modifier un data frame (1)
+
+- La logique pour modifier les cellules existantes d’un data frame est la même que
+pour les vecteurs : on met la sélection de cellules à modifier du coté gauche de
+l’assignation.
+- Deux solutions existent selon qu’on considère un data frame comme :
+  - une liste de vecteurs
+  - ou comme une matrice
+- La seconde possibilité permet en outre de modifier simultanément plusieurs colonnes
+
+
+## Modifier un data frame (2)
+
+- Création du data frame
+```{r}
+df <- read.table(h=TRUE, text=
+"x  y z
+un  1 NA
+deux  NA  2")
+df
+```
+
+- Exemple 1: modification d'une seule cellule
+
+```{r}
+df[df$x=="un","z"] <- 2
+df
+```
+
+## Modifier un data frame (3)
+
+- Exemple 2: modification d'une seule cellule
+```{r}
+df$z[df$x=="un"]<- 1
+df
+```
+
+- Exemple 3: modification de plusieurs cellules
+```{r}
+df[df$x=="un",c("y","z")] <- 0
+df
+```
+
+## Modifier un data frame (4)
+
+- Ajouter une colonne est également possible : la cohérence est assurée.
+```{r}
+df$new<- "a"
+df
+```
+
+- Pour ajouter des lignes il faut faire appel à la fonction de concaténation de data frames :
+`rbind`
+
+
+## Les objets `tibble` (1)
+
+- Par défaut, l’affichage d’un gros "data frame" n’est guère commode : il y a bien une limite en termes
+de lignes affichées, mais celle ci (certes paramétrable) est élevée. De plus, lorsqu’on a de nombreuses
+variables, toutes sont affichées conduisant à une présentation sur plusieurs lignes.
+- Le monde du “tidyverse” (package dplyr) introduit la notion de tibble, un « data frame »
+qui s’affiche “proprement” : uniquement 10 lignes (c’est paramétrable) et uniquement les colonnes qui
+peuvent tenir dans la fenêtre. Le reste est mis en commentaire. Enfin, taille du « data frame » et type
+des variables sont affichés.
+
+## Les objets `tibble` (2)
+
+- La fonction `as_tibble` permet de convertir un data frame 
+```{r, message=FALSE}
+library(tidyr)
+mtcars %>% as_tibble() -> a
+a
+```
+
+- Attention, les noms de lignes sont perdus lors de la conversion
+```{r}
+rownames(a)
+```
+
+## Les objets `tibble` (3)
+
+- REMARQUE : Le mode “tibble” est en fait un exemple d’un nouveau type de données créé comme
+spécialisation d’un autre plus général (`data.frame`)
+```{r}
+class(a)
+```
+- La fonction ‘as.data.frame’ permet de faire la conversion inverse.
+```{r}
+as.data.frame(a)
+```
+
 
 
 # Programmation avec R
@@ -1094,8 +1292,8 @@ spread(clé,donnée)
 ## Quelques principes de programmation (1)
 
 - Commencez petit: 
-  -Pour résoudre un problème ‘truc’, ne pas commencer par écrire ‘truc <- function...’. 
-  - Mais commencer par décomposer le problème en sous questions élémentaires et ensuite commencer par coder et tester ses sous-questions. 
+  - Pour résoudre un problème ‘truc’, ne pas commencer par écrire `truc <- function...` 
+  - Mais commencer par décomposer le problème en sous questions élémentaires et ensuite commencer par coder et tester ces sous-questions
   - L’assemblage n’est que la dernière étape.
 
 
