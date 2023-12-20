@@ -335,7 +335,7 @@ assign("x",pi)
 ## Les objets ne sont pas modifiables (2)
 
 - Par exemple, avec le package dplyr, pour convertir la colonne 
-`sexe` de la table ‘nanopop’ en numérique dans une nouvelle variable sexe2, on écrira :
+`sexe` de la table `nanopop’ en numérique dans une nouvelle variable sexe2, on écrira :
 ```{r, eval=FALSE}
 nanopop %>% mutate(sexe2=as.numeric(sexe))
 ```
@@ -617,7 +617,7 @@ which(LETTERS>="N" & LETTERS<="P")
 ```{r}
 LETTERS[which(LETTERS>="N" & LETTERS<="P")]
 ```
-- Version plus simple sans ‘which’
+- Version plus simple sans `which’
 ```{r}
 LETTERS[LETTERS>="N" & LETTERS<="P"]
 ```
@@ -1009,7 +1009,7 @@ head(carburants)
 
 ## Exercice: Sélection des lignes
 
-- Avec la fonction `str_detect` de stringr, ne conserver que les lignes contenant ‘pdv ’ (avec un espace à la fin, donc ne contenant pas ‘pdv_liste’). 
+- Avec la fonction `str_detect` de stringr, ne conserver que les lignes contenant `pdv ’ (avec un espace à la fin, donc ne contenant pas `pdv_liste’). 
 - str_detect est une fonction qui accepte une expression régulière mais nous n’en avons pas besoin ici.
 ```{r}
 library(stringr)
@@ -1042,7 +1042,7 @@ si son premier argument contient quelque chose ressemblant à son second argumen
 - Les éléments de syntaxe les plus fréquemment utilisés :
 
 ```{r, eval=FALSE}
-str_detect(arg,"^0") # commence par ‘0’
+str_detect(arg,"^0") # commence par `0’
 str_detect(arg,"0$") # se termine par ‘0’
 str_detect(arg,"^\\$") # commence par ‘$’ non interprété
 
@@ -1068,6 +1068,21 @@ str_detect(arg,"^(19|20)")# commence par ‘19’ ou ‘20’
 - Avec la fonction `separate`, séparer les deux composants des couples nom=valeur dans deux nouvelles colonnes.
 - Le résultat peut être considéré comme une table en format long : un colonne indique le nom de la donnée, une autre la valeur. Mettre le résultat en format « large » (fonction spread ou équivalent): une colonne par modalité du nom.
 - Avec la fonction `gf_point` de `ggformula`, faire une carte des latitudes - longitudes, en les ayant préalablement converties en numérique.
+```{r, echo=FALSE}
+carburants2 <- data.frame(d=carburants, 
+                          no=seq_along(carburants),
+                          stringsAsFactors = FALSE) 
+head(carburants2)
+
+carburants2 <- carburants2 %>%
+  mutate(l=str_split(d," ")) %>% unnest(l) %>%
+  separate(l,c("clé","donnée"),"=")
+
+carburants2 %>% select(-d) %>% 
+  pivot_wider(names_from=clé, values_from=donnée)
+
+head(carburants2)
+```
 
 
 # Tables de données en R: les data frames
@@ -1167,6 +1182,12 @@ mtcars[["hp"]][1:10]
     - de l'année 2022
 
 - Ne produire que les valeurs distinctes (utiliser deux méthodes différentes : avec dplyr ou sans, grâce à un peu de recherche).
+```{r, echo=FALSE}
+nais2022 <- read.csv2("/home/alex/Devel/Cours-R-Programmation/data/dpt2022.csv")
+
+nais2022 <- nais2022[nais2022$preusuel!="_PRENOMS_RARES",]
+```
+
 
 ## La fonction `with`
 
@@ -1314,12 +1335,11 @@ as.data.frame(a)
 
 ## Quelques principes de programmation (4)  
   
-- Respectez la symétrie.
-Si le problème à traiter présente une forme de symétrie, celle-ci doit se retrouver dans le code, sinon c’est un indice de cas mal couverts.
--Ne vous préoccupez pas d’optimisation, sauf dans les cas critiques
--Testez
-Commencer par les cas extrêmes. Les autres ont plus de chances de fonctionner.
+- Respectez la symétrie: si le problème à traiter présente une forme de symétrie, celle-ci doit se retrouver dans le code, sinon c’est un indice de cas mal couverts.
+- Ne vous préoccupez pas d’optimisation, sauf dans les cas critiques
+- Testez: commencer par les cas extrêmes. Les autres ont plus de chances de fonctionner.
 
+## Quelques principes de programmation (5) 
 
 - Adoptez un style et tenez vous y.
 - Il y a plusieurs façons d’écrire du R, de nommer ses objets ou de présenter les programmes.
@@ -1328,10 +1348,7 @@ Commencer par les cas extrêmes. Les autres ont plus de chances de fonctionner.
 - Décrivez ce que font vos fonctions.
 - Commentez les passages difficiles.
 - Mais uniquement les passages difficiles : un commentaire de type paraphrase alourdit les programmes et floute la vision.
--
-Soignez l’esthétique !
-Votre programme est votre bébé : gardez le propre, bien proportionné et beau. Plus il sera beau plus il sera attachant et incitera
-à lire votre code ou à lui faire confiance.
+- Soignez l’esthétique: votre programme est votre bébé : gardez le propre, bien proportionné et beau. Plus il sera beau plus il sera attachant et incitera à lire votre code ou à lui faire confiance.
 
 
 
@@ -1348,12 +1365,299 @@ fonction dans l’environnement courant
 
 ```{r}
 Somme <- function(début,fin)
-  sum(c(-1,1)*(début:fin)^2)
+  sum(début:fin)
 ```
 
 5. Utilisation de la fonction
 ```{r}
-Somme(1,100)
+Somme(1,10)
+```
+
+## Utilisation des fonctions (1)
+
+- Un nom seul est interprété comme l’accès à l’objet qu’il référence, dans le
+cas d’une fonction c’est le **code** de la fonction
+```{r}
+Somme
+```
+
+- Un nom suivi de parenthèses, éventuellement sans rien dedans, correspond à l’appel de la fonction avec les arguments précisés entre parenthèses
+- Le code ci-dessous produit une erreur
+```{r, eval=FALSE}
+Somme()
+```
+
+## Utilisation des fonctions (2)
+
+- Dans un pipe, du coté droit on trouve un appel de fonction qui sera complété par le
+résultat du calcul spécifié coté gauche : l’usage des parenthèses devrait donc être
+obligatoire même s’il n’y a pas d’argument complémentaire. Avec le pipe de la 4.1 on
+n’aura plus le choix
+- Le code ci-dessous produit une erreur
+```{r, eval=FALSE}
+1 |> print
+```
+- Utilisation correcte
+```{r}
+1 |> print()
+```
+
+## L’expression formant la fonction
+
+- Soit UNE fonction éventuellement faisant appel à d’autres fonctions ou
+opérateurs de façon emboîtée, enchaînés par un pipe ou appels imbriqués.
+
+```{r, eval=FALSE}
+Somme <- function(début,fin)
+  sum(début:fin)
+```
+
+- Soit l’appel de la fonction "accolades" à la syntaxe spéciale où les arguments sont séparés par des point-virgules ou des passage à la ligne et qui évalue successivement
+tous ses arguments pour donner en résultat le résultat de l’évaluation du dernier.
+```{r}
+Somme <- function(début,fin) {
+  temp <- début:fin
+  sum(temp)
+}
+```
+
+## Nommer ses fonctions (1)
+
+- Un nom de fonction est un symbole et est donc sujet aux mêmes contraintes :
+  - commencer par une lettre ou un point
+  - contenir des lettres, des chiffres, des points ou un underscore `_`
+
+- Eviter d'utiliser des caractères spécifiques à la langue déclarée lors de l’installation (les caractères accentués en français) ou des caractères issus d’autre alphabets) 
+
+## Nommer ses fonctions (2)
+
+- Utiliser des noms parlants : ‘f’ n’est bon que pour une démonstration ou un test.
+- Ne pas préfixer par quelque chose comme fonction_ ou f_… . Le contexte de
+déclaration et d’usage est suffisamment explicite pour qu’on voie au premier coup
+d’oeil qu’il s’agit d’une fonction.
+- Eviter les points. Bien qu’il y ait une fonction file.choose en contre exemple
+et que rien n’interdit leur usage, les points servent à la définition de fonctions
+génériques telles print.ggplot (fonction qui se charge de l’impression d’un
+objet généré par ggplot2)
+
+## Nommer ses fonctions (3)
+
+- Noter que les objets dont les noms commencent par un point ne sont pas visibles dans la fenêtre environnement de RStudio.
+- Faire un usage raisonné des majuscules : une habitude, indépendante de R, est
+de réserver les noms complètement en majuscules à des données constantes sur
+tout le programme.
+- Utiliser des noms composés d’un verbe suivis du type d’objet, par exemple :
+lire_fichier, generer_boxplot…
+- On peut aussi utiliser le “camelCase” : lireFichier, genererBoxplot… Mais il
+faut prendre garde qu’en cas d’incursion dans les couches objets S4 et R6, cette
+notation y est l’équivalent de l’usage du point avec les fonctions génériques,
+
+## Nommer les paramètres
+
+- Les noms des paramètres sont, comme les noms des fonctions, des symboles qu’on
+peut choisir arbitrairement.
+- Néanmoins, si le code de la fonction est un peu long (ce qui n’est pas souhaitable!) il
+peut être intéressant d’avoir une convention de nommage qui permet de séparer au
+premier coup d’oeil ce qui est paramètre de ce qui ne l’est pas. Il n’existe pas de
+préconisation standard mais on peut penser à ;
+  - Préfixer par p_ : p_dep
+  - Préfixer par un point, c’est qui est fait dans dplyr
+  - Préfixer par un article : leDep (theDep en anglais)
+  - Utiliser une majuscule au début : Dep
+
+- Le tout sera de se tenir aux choix faits !
+- La limite de ce type de convention est qu’elle ne s’applique qu’aux premiers paramètres
+lorsque leurs valeurs seront passées par position. Pour les suivants où la valeur sera
+passée par le nom du paramètre, mieux avoir quelque chose de parlant pour
+l’utilisateur plutôt que pour le programmeur de la fonction.
+- Enfin, s’il y a une éventualité que la fonction sorte de l’hexagone, par exemple en
+faisant partie d’un package, il faut s’habituer à tout écrire en anglais, nom de la
+fonctions, des paramètres et, bien sûr, commentaires et documentation.
+
+## Exercice
+
+- Transformez en fonction de deux paramètres le code suivant, pour qu’on puisse l’utiliser avec n’importe quel département (ou liste de départements) et une autre variable que ‘indnatm’.
+
+```{r}
+read.csv2("/home/alex/Devel/Cours-R-Programmation/data/dpt2022.csv") %>%
+  .[.$dpt %in% c("17","86"), c("dpt","annais")] %>%
+  group_by_at(c("dpt","annais")) %>%
+  summarise(n=n())
+```
+## Construire un opérateur : % … %
+-  Un cas particulier de syntaxe dans les noms de fonction est l’usage du caractère
+“pourcent” comme dans `%>%` (on peut mettre n’importe quel caractère différent de %
+entre les %, y compris des espaces). 
+- Le caractère “pourcent” offre la possibilité de définir ses propres opérateurs binaires, Cela fournit juste une syntaxe alternative à tout appel de fonction à deux arguments.
+- Par exemple, pour définir un opérateur de concaténation de chaînes de caractères :
+```{r}
+`%+%` <- function(left,right) paste0(left, right)
+"un" %+% "deux"
+```
+
+
+## Des paramètres sans nom : l’ellipse `...`
+
+- Le symbole `...` spécifié dans les paramètres d’une fonction joue un rôle
+particulier : il collecte le reste des arguments après que les autres paramètres
+aient été alimentés par les arguments de l’appel de la fonction.
+```{r, echo=FALSE, eval=FALSE}
+f <- function (x,...) str(get("..."))
+f(1,TRUE,z=2)
+```
+
+- Il s’agit d’un objet d’un nouveau type et structure très spécifiques, mais cet objet
+peut être transféré à une autre fonction qui pourra, par exemple, le mettre
+sous une forme exploitable : list ou c, pour ensuite permettre de parcourir
+l’ensemble des valeurs
+
+```{r}
+f <- function (x,...) list(...)
+f(1,TRUE,z=2)
+```
+
+## Une utilisation classique de l’ellipse (1)
+
+- L’ellipse peut aussi servir à transporter des paramètres destinés à une autre fonction sans préciser quels sont ces paramètres. 
+- C’est le mécanisme utilisé par les fonctions `import’ et `export’ de rio pour, sans programmation complémentaire, autoriser la spécification d’options propres aux fonctions des divers packages qui sont appelés suivant le suffixe du fichier.
+
+## Une utilisation classique de l’ellipse (2)
+
+- Dans l’exemple ci dessous la fonction `realiser_graphique` est définie avec un unique
+paramètre fournissant le département de travail mais on peut lui passer n'importe quoi d’autre qui sera alorstransmis à la fonction `gf_bar`
+```{r, out.width="70%", fig.align="center"}
+freq_prenom <- function(data, prenom, ...)
+  
+  data %>%
+    filter(preusuel==prenom) %>%
+    gf_bar( ~ annais, fill=~ sexe, position= "dodge", ...)
+
+g <- freq_prenom(nais2022, "LUIS", color="green")
+```
+
+## Une utilisation classique de l’ellipse (3)
+
+- Affichage du graphique
+```{r, out.width="70%", fig.align="center"}
+g + theme_minimal()
+```
+
+
+
+## La fonction `do.call`
+
+- En R il est facile de construire dynamiquement un appel de fonction :
+  - on peut paramétrer le nom de la fonction à appeler :
+```{r}
+f <- `*`
+f(6,7)
+```
+  - Il est trivial de paramétrer chacun des arguments,
+```{r}
+p <- 6 ; q <- 7
+f(p,q)
+```
+
+-  La fonction `do.call` permet de paramétrer l’ensemble des arguments qu’on doit
+fournir en les spécifiant sous forme d’une unique liste :
+```{r}
+l <- list(6,7)
+do.call(f,l)
+```
+
+## la fonction `match.arg` (1)
+
+- Lorsqu’on appelle une fonction en donnant le nom des paramètres il n’est pas nécessaire de les donner en entier : toute abréviation non ambiguë fait l’affaire.
+- La fonction qui est derrière ce mécanisme est `match.arg` qui permet de convertir une abréviation en un nom complet appartenant à une liste prédéfinie.
+```{r}
+freq_prenom <- function(data, prenom, type_graphique, ...) {
+  type_graphique <- match.arg(type_graphique,
+    choices = c("histogramme", "densite"))
+
+  data %>%
+    filter(preusuel == prenom) %>%
+    group_by(annais) %>% summarise(n=sum(nombre)) %>%
+        (if (type_graphique == "histogramme") gf_histogram else gf_density)( ~ n, ...)
+}
+```
+
+## la fonction `match.arg` (2)
+
+```{r, out.width="70%"}
+freq_prenom(nais2022, "PAUL", type_graphique = "hist")
+```
+
+## Exercice (1)
+
+- Rassembler toutes les étapes, sauf la première 
+```{r}
+con <- file("../data/PrixCarburants_quotidien_20231211.xml", encoding = "latin1")
+z <- readLines(con)
+close(con)
+```
+et la dernière, dans une seule fonction sans argument
+```{r, echo=FALSE}
+lire <- function(tag) 
+  z[str_detect(z,paste0('<',tag,' '))] %>%
+    str_replace_all(paste0(" +<",tag,' '),"") %>%
+    str_replace_all(paste0(' */?>'),"") %>%
+    str_replace_all("\"","") %>%
+    data.frame(
+      d=.,
+      no=seq_along(.),
+      stringsAsFactors=FALSE) %>%
+    mutate(l=str_split(d," +")) %>%
+    unnest(l) %>%
+    separate(l,c("clé","donnée"),"=") %>%
+    spread(clé,donnée)
+
+pdv <- lire("pdv")
+head(pdv)
+```
+
+- Faire un graphique 'nuage de points' x=longitude, y=latitude des points de vente
+
+
+## Exercice (2)
+
+- Paramétrer cette fonction pour qu’elle puisse fonctionner sur les lignes « pdv »
+mais aussi « prix » ou d’autres (attention le marqueur de fin est différent, ‘ />’
+avec un espace avant, mais ce sont les lignes point de vente qui constituent
+une exception).
+- Rajouter une colonne ‘date’ (de type date) à partir du début de la colonne
+‘maj’. Mettre en numérique le contenu de ‘valeur’ (le prix en millièmes d’euros),
+puis calculer le prix moyen du SP98 par jour (fonctions group_by et
+summarise de dplyr). Avec la fonction gf_line tracer l’évolution du prix
+moyen.
+- Faire la même chose en superposant les courbes obtenues pour chaque type
+de carburant.
+
+```{r, echo=FALSE, out.width="60%"}
+SP98 <- lire("prix") %>%
+  filter(nom=="SP98") %>%
+  mutate(date=as.Date(substr(maj,1,10)),
+  prix=as.numeric(valeur)) 
+
+SP98 %>%
+  group_by(date) %>%
+  summarise(prix=mean(prix)) %>%
+  gf_line(prix ~ date)
+
+```
+
+# Traitements itératifs
+
+# Itérer un traitement un nombre fixe de fois (1/3)
+
+- R est un langage fonctionnel.
+- Le principe le plus naturel en R pour répéter un traitement consiste à :
+  - définir le traitement sous forme d'une fonction dont les paramètres seront ce qui va varier entre les différents traitements,
+  - appliquer cette fonction aux différents cas, en spécifiant ceux ci sous forme de liste.
+Il existe de nombreuses fonctions permettant d'appliquer une fonction à chacun des éléments d'une liste. 
+- En utilisant le R de base, pour effectuer la lecture successive des deux départements de Charente (16) et Charente-Maritime (17), on pourra faire :
+
+```{r}
+ldf <- Map(lire1, c("16","17"))
 ```
 
 
